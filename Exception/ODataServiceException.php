@@ -26,8 +26,7 @@ require_once dirname(dirname(__FILE__)).'/Parser/AtomParser.php';
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class ODataServiceException extends Exception
-{
+class ODataServiceException extends Exception {
     protected $_error;
     protected $_detailedError;
     protected $_headers;
@@ -43,8 +42,7 @@ class ODataServiceException extends Exception
      * @param string $content_type
      */
     public function ODataServiceException($errorStr, $content_type = '',
-                                          $headers = array(), $statusCode = '')
-    {
+                                          $headers = array(), $statusCode = '') {
         $this->_headers = $headers;
         $this->_statusCode = $statusCode;
         AtomParser::GetErrorDetails($errorStr, $this->_error,
@@ -56,8 +54,7 @@ class ODataServiceException extends Exception
      *
      * @return string
      */
-    public function getError()
-    {
+    public function getError() {
         return $this->_error;
     }
 
@@ -66,8 +63,7 @@ class ODataServiceException extends Exception
      *
      * @return string
      */
-    public function getDetailedError()
-    {
+    public function getDetailedError() {
         return $this->_detailedError;
     }
 
@@ -76,8 +72,7 @@ class ODataServiceException extends Exception
      *
      * @return array
      */
-    public function getHeaders()
-    {
+    public function getHeaders() {
 	return $this->_headers;
     }
 
@@ -86,9 +81,8 @@ class ODataServiceException extends Exception
      *
      * @return int
      */
-    public function getStatusCode()
-    {
+    public function getStatusCode() {
         return $this->_statusCode;
     }
  }
-?>
+

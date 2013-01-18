@@ -21,8 +21,7 @@
  *
  * Represents invalid operation performed by the client application during tracking.
  */
-class InvalidOperation extends Exception
-{
+class InvalidOperation extends Exception {
     /**
      *
      * @var string
@@ -41,8 +40,7 @@ class InvalidOperation extends Exception
      * @param string $error
      * @param string $detailedError
      */
-    public function InvalidOperation($error, $detailedError = null)
-    {
+    public function InvalidOperation($error, $detailedError = null) {
         $this->_error = $error;
         $this->_detailedError = $detailedError;
     }
@@ -52,8 +50,7 @@ class InvalidOperation extends Exception
      *
      * @return string
      */
-    public function getError()
-    {
+    public function getError() {
         return $this->_error;
     }
 
@@ -62,9 +59,8 @@ class InvalidOperation extends Exception
      *
      * @return string
      */
-    public function getDetailedError()
-    {
+    public function getDetailedError() {
         return $this->_detailedError;
     }
 }
-?>
+

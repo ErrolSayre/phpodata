@@ -21,8 +21,7 @@
  *
  * To represent the return value of ObjectContext::GetReadStream API.
  */
-class DataServiceStreamResponse
-{
+class DataServiceStreamResponse {
     protected $_httpResponse = null;
     protected $_headers = null;
 
@@ -31,15 +30,11 @@ class DataServiceStreamResponse
      *
      * @param HttpResponse $httpResponse
      */
-    public function DataServiceStreamResponse($httpResponse)
-    {
+    public function DataServiceStreamResponse($httpResponse) {
         if(is_object($httpResponse) &&
-           is_a($httpResponse, 'Microsoft_Http_Response'))
-	{
+           is_a($httpResponse, 'Microsoft_Http_Response')) {
             $this->_httpResponse = $httpResponse;
-        }
-        else
-        {
+        } else {
             throw new ODataServiceException(Resource::ExpectedValidHttpResponse,
                                             '',
                                             array(),
@@ -52,10 +47,8 @@ class DataServiceStreamResponse
      *
      * @return array
      */
-    public function getHeaders()
-    {
-        if($this->_headers == null)
-        {
+    public function getHeaders() {
+        if($this->_headers == null) {
             $this->_headers = $this->_httpResponse->getHeaders();
         }
         return $this->_headers;
@@ -67,11 +60,9 @@ class DataServiceStreamResponse
      * @return string
      */
 
-    public function getContentDisposition()
-    {
+    public function getContentDisposition() {
         $headers = self::getHeaders();
-        if(isset($headers[HttpRequestHeader::ContentDisposition]))
-        {
+        if(isset($headers[HttpRequestHeader::ContentDisposition])) {
             return $headers[HttpRequestHeader::ContentDisposition];
         }
 
@@ -83,11 +74,9 @@ class DataServiceStreamResponse
      *
      * @return string
      */
-    public function getContentType()
-    {
+    public function getContentType() {
         $headers = self::getHeaders();
-        if(isset($headers[HttpRequestHeader::ContentType]))
-        {
+        if(isset($headers[HttpRequestHeader::ContentType])) {
             return $headers[HttpRequestHeader::ContentType];
         }
 
@@ -99,9 +88,7 @@ class DataServiceStreamResponse
      *
      * @return binaryStream
      */
-    public function getStream()
-    {
+    public function getStream() {
         return $this->_httpResponse->getBody();
     }
 }
-?>

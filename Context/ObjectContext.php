@@ -74,8 +74,7 @@ require_once $PHPOData_Path.'/Exception/InternalError.php';
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class ObjectContext
-{
+class ObjectContext {
     /**
      * The url to OData Service
      *
@@ -246,8 +245,7 @@ class ObjectContext
      *
      * @param string $uri
      */
-    public function __construct($uri)
-    {
+    public function __construct($uri) {
         $this->ObjectToResource = new Dictionary();
         $this->Bindings = new Dictionary();
         $this->IdentityToResource = array();
@@ -261,8 +259,7 @@ class ObjectContext
         $this->_baseURI = $uri;
         $this->_baseUriWithSlash = $this->_baseURI;
         $this->CustomHeaders = array();
-        if($this->_baseUriWithSlash[(strlen($this->_baseUriWithSlash) - 1)] != '/')
-        {
+        if($this->_baseUriWithSlash[(strlen($this->_baseUriWithSlash) - 1)] != '/') {
             $this->_baseUriWithSlash = $this->_baseUriWithSlash . '/';
         }
 
@@ -279,11 +276,9 @@ class ObjectContext
      * @param SaveChangesOptions $saveChangesOptions
      * @throws InvalidOperation
      */
-    public function SetSaveChangesOptions($saveChangesOptions)
-    {
+    public function SetSaveChangesOptions($saveChangesOptions) {
         if($saveChangesOptions != SaveChangesOptions::None &&
-           $saveChangesOptions != SaveChangesOptions::Batch)
-        {
+           $saveChangesOptions != SaveChangesOptions::Batch) {
             throw new InvalidOperation(Resource::InvalidSaveChangesOptions);
         }
         $this->_saveChangesOptions = $saveChangesOptions;
@@ -295,8 +290,7 @@ class ObjectContext
      *
      * @param boolean $replaceOnUpdate
      */
-    public function SetReplaceOnUpdate($replaceOnUpdate)
-    {
+    public function SetReplaceOnUpdate($replaceOnUpdate) {
         $this->_replaceOnUpdateOption = $replaceOnUpdate;
     }
 
@@ -307,11 +301,9 @@ class ObjectContext
      * @param Object $object The instance of entity to be inserted
      * @throws InvalidOperation
      */
-    public function AddObject($entityName, $object)
-    {
+    public function AddObject($entityName, $object) {
         $this->ThrowExceptionIfNotValidObject($object, 'AddObject');
-        if ($this->ObjectToResource->ContainsKey($object))
-        {
+        if ($this->ObjectToResource->ContainsKey($object)) {
             throw new InvalidOperation(Resource::EntityAlreadyContained,
                                        Resource::EntityAlreadyContained_Details);
         }
@@ -329,18 +321,15 @@ class ObjectContext
      * @param Object $object The instance of entity to be updated
      * @throws InvalidOperation
      */
-    public function UpdateObject($object)
-    {
+    public function UpdateObject($object) {
         $this->ThrowExceptionIfNotValidObject($object, 'UpdateObject');
         $resourcebox = null;
-        if (!$this->ObjectToResource->TryGetValue($object, $resourcebox))
-        {
+        if (!$this->ObjectToResource->TryGetValue($object, $resourcebox)) {
             throw new InvalidOperation(Resource::EntityNotContained,
                                        Resource::EntityNotContained_Details);
         }
 
-        if (EntityStates::Unchanged == $resourcebox->State)
-        {
+        if (EntityStates::Unchanged == $resourcebox->State) {
             $resourcebox->State = EntityStates::Modified;
             $this->IncrementChange($resourcebox);
         }
@@ -355,8 +344,7 @@ class ObjectContext
      * @param string $entityName The class name of target object
      * @throws InvalidOperation
      */
-    public function AddLink($sourceObject, $sourceProperty, $targetObject)
-    {
+    public function AddLink($sourceObject, $sourceProperty, $targetObject) {
         $this->ThrowExceptionIfNotValidObject($sourceObject, 'AddLink');
         $this->ThrowExceptionIfNotValidObject($targetObject, 'AddLink');
         $key = new RelatedEnd($sourceObject, $sourceProperty, $targetObject);
@@ -375,29 +363,23 @@ class ObjectContext
      * @param Object $object The entity instance to be deleted.
      * @throws InvalidOperation
      */
-    public function DeleteObject($object)
-    {
+    public function DeleteObject($object) {
         $this->ThrowExceptionIfNotValidObject($object, 'DeleteObject');
         $resourceBox = null;
-        if (!$this->ObjectToResource->TryGetValue($object, $resourceBox))
-        {
+        if (!$this->ObjectToResource->TryGetValue($object, $resourceBox)) {
             throw new InvalidOperation(Resource::EntityNotContained,
                                        Resource::EntityNotContained_Details);
         }
 
         $state = $resourceBox->State;
-        if (EntityStates::Added == $state)
-        {
-            if (null != $resourceBox->Identity)
-            {
+        if (EntityStates::Added == $state) {
+            if (null != $resourceBox->Identity) {
                 unset($this->IdentityToResource[$resourceBox->Identity]);
             }
             $this->DetachRelated($resourceBox);
             $resourceBox->State = EntityStates::Detached;
             $this->ObjectToResource->Remove($object);
-        }
-        else if (EntityStates::Deleted != $state)
-        {
+        } else if (EntityStates::Deleted != $state) {
             $resourceBox->State = EntityStates::Deleted;
             $this->IncrementChange($resourceBox);
         }
@@ -412,16 +394,14 @@ class ObjectContext
      * @param string $entityName The class name of target object
      * @throws InvalidOperation
      */
-    public function DeleteLink($sourceObject, $sourceProperty, $targetObject)
-    {
+    public function DeleteLink($sourceObject, $sourceProperty, $targetObject) {
         $this->ThrowExceptionIfNotValidObject($sourceObject, 'DeleteLink');
         $this->ThrowExceptionIfNotValidObject($targetObject, 'DeleteLink');
         $key = new RelatedEnd($sourceObject, $sourceProperty, $targetObject);
         $this->ValidateDeleteLink($key);
         $bindingValue = null;
         $this->Bindings->TryGetValue($key, $bindingValue);
-        if($bindingValue != null && EntityStates::Added == $bindingValue->State)
-        {
+        if($bindingValue != null && EntityStates::Added == $bindingValue->State) {
             $this->DetachExistingLink($key);
             return;
         }
@@ -432,19 +412,15 @@ class ObjectContext
 
         if((($bindingValue == null) &&
                  ((EntityStates::Added == $sourceResourceBox->State) ||
-                  (EntityStates::Added == $targetResourcebox->State))))
-        {
+                  (EntityStates::Added == $targetResourcebox->State)))) {
             throw new InvalidOperation(Resource::NoRelationWithInsertEnd,
                                        Resource::NoRelationWithInsertEnd_Details);
-        }
-        else if ($bindingValue == null)
-        {
+        } else if ($bindingValue == null) {
             $this->Bindings->Add($key, $key);
             $sourceResourceBox->RelatedLinkCount++;
             $bindingValue = $key;
         }
-        if (EntityStates::Deleted != $bindingValue->State)
-        {
+        if (EntityStates::Deleted != $bindingValue->State) {
             $bindingValue->State = EntityStates::Deleted;
             $this->IncrementChange($bindingValue);
         }
@@ -459,25 +435,21 @@ class ObjectContext
      * @param Object $targetObject The target object participating the association.
      * @throws InvalidOperation
      */
-    public function SetLink($sourceObject, $sourceProperty, $targetObject)
-    {
+    public function SetLink($sourceObject, $sourceProperty, $targetObject) {
         $this->ThrowExceptionIfNotValidObject($sourceObject, 'SetLink');
-        if(null != $targetObject)
-        {
+        if(null != $targetObject) {
             $this->ThrowExceptionIfNotValidObject($targetObject, 'SetLink');
         }
         $key = new RelatedEnd($sourceObject, $sourceProperty, $targetObject);
         $this->ValidateSetLink($key);
         $key1 = $this->DetachReferenceLink($sourceObject, $sourceProperty, $targetObject);
-        if($key1 == null)
-        {
+        if($key1 == null) {
               $key1 = $key;
               $key1->State = EntityStates::Added;
               $this->Bindings->Add($key1, $key1);
         }
 
-        if (EntityStates::Modified != $key1->State)
-        {
+        if (EntityStates::Modified != $key1->State) {
             $key1->State = EntityStates::Modified;
             $sourceResourceBox = null;
             $this->ObjectToResource->TryGetValue($sourceObject, $sourceResourceBox);
@@ -496,23 +468,19 @@ class ObjectContext
      * @param array $headers HTTP Header
      * @throws InvalidOperation
      */
-    public function SetEntityHeaders($object, $headers)
-    {
-        if(!is_array($headers))
-        {
+    public function SetEntityHeaders($object, $headers) {
+        if(!is_array($headers)) {
             throw new InvalidOperation(Resource::EntityHeaderOnlyArray, null);
         }
 
         $this->ThrowExceptionIfNotValidObject($object, 'SetEntityHeaders');
-        if (!$this->ObjectToResource->TryGetValue($object, $resourcebox))
-        {
+        if (!$this->ObjectToResource->TryGetValue($object, $resourcebox)) {
            throw new InvalidOperation(Resource::EntityNotContained,
                                       Resource::EntityNotContained_Details);
         }
 
         if(!($resourcebox->State == EntityStates::Added ||
-             $resourcebox->State == EntityStates::Modified))
-        {
+             $resourcebox->State == EntityStates::Modified)) {
            throw new InvalidOperation(Resource::EntityHeaderCannotAppy, null);
         }
 
@@ -524,15 +492,11 @@ class ObjectContext
      *
      * @throws ODataServiceException
      */
-    public function SaveChanges()
-    {
+    public function SaveChanges() {
         $result = new SaveResult($this, $this->_saveChangesOptions);
-        if($this->_saveChangesOptions == SaveChangesOptions::Batch)
-        {
+        if($this->_saveChangesOptions == SaveChangesOptions::Batch) {
             $result->BatchRequest($this->_replaceOnUpdateOption);
-        }
-        else
-        {
+        } else {
             $result->NonBatchRequest($this->_replaceOnUpdateOption);
         }
     }
@@ -544,10 +508,8 @@ class ObjectContext
      * @param $entry The ResourceBox or RelatedEnd
      * @Return bool
      */
-    public function HasModifiedResourceState($entry)
-    {
-        if(EntityStates::Unchanged != $entry->State)
-        {
+    public function HasModifiedResourceState($entry) {
+        if(EntityStates::Unchanged != $entry->State) {
             return TRUE;
         }
 
@@ -568,39 +530,31 @@ class ObjectContext
      * @throws InvalidOperation, DataServiceRequestException
      */
     public function LoadProperty($sourceObject, $propertyName,
-                                 $dataServiceQueryContinuation = null)
-    {
+                                 $dataServiceQueryContinuation = null) {
         $this->ThrowExceptionIfNotValidObject($sourceObject, 'LoadProperty');
         $requestUri = null;
         $resourceBox = null;
-        if (!$this->ObjectToResource->TryGetValue($sourceObject, $resourceBox))
-        {
+        if (!$this->ObjectToResource->TryGetValue($sourceObject, $resourceBox)) {
              throw new InvalidOperation(Resource::EntityNotContained,
                                         Resource::EntityNotContained_Details);
         }
 
         $state = $resourceBox->State;
-        if (EntityStates::Added == $state)
-        {
+        if (EntityStates::Added == $state) {
             throw new InvalidOperation(Resource::NoLoadWithInsertEnd, null);
         }
 
-        try
-        {
+        try {
             $property = new ReflectionProperty($sourceObject, $propertyName);
         }
-        catch(ReflectionException $exception)
-        {
+        catch(ReflectionException $exception) {
             throw new InvalidOperation(Resource::NoLoadWithUnknownProperty .
                                        $propertyName);
         }
 
-        if($dataServiceQueryContinuation != null)
-        {
+        if($dataServiceQueryContinuation != null) {
             $requestUri = $dataServiceQueryContinuation->getNextLinkUri();
-        }
-        else
-        {
+        } else {
             $requestUri = $resourceBox->GetResourceUri($this->_baseUriWithSlash) .
                                         "/" .
                                         $propertyName;
@@ -626,26 +580,20 @@ class ObjectContext
      * @return QueryOperationResponse
      * @throws DataServiceRequestException
      */
-    public function Execute($uriOrDSQueryContinuation)
-    {
+    public function Execute($uriOrDSQueryContinuation) {
         $queryComponents = null;
 
-	if(is_string($uriOrDSQueryContinuation))
-	{
+	if(is_string($uriOrDSQueryContinuation)) {
             //Client is allowed to pass entitySet name in either
             //'EntitySetName' or '/EntitySetName' format (with or without slash)
             $uriOrDSQueryContinuation = ltrim($uriOrDSQueryContinuation, '/');
             $requestUri = $this->_baseUriWithSlash . $uriOrDSQueryContinuation;            
             $queryComponents = new QueryComponents($requestUri, null);
-	}
-	else if(is_object($uriOrDSQueryContinuation) &&
+	} else if(is_object($uriOrDSQueryContinuation) &&
 		is_a($uriOrDSQueryContinuation,
-		     'DataServiceQueryContinuation'))
-	{
+		     'DataServiceQueryContinuation')) {
             $queryComponents = $uriOrDSQueryContinuation->CreateQueryComponents();
-	}
-	else
-	{
+	} else {
             $queryOperationResponse = new QueryOperationResponse(array(),
                                                                  Resource::InvalidExecuteArg,
                                                                  '',
@@ -663,8 +611,7 @@ class ObjectContext
         if((strpos($queryComponents->Uri, '$inlinecount') !== FALSE)||
            (strpos($queryComponents->Uri, '$count') !== FALSE)||
            (strpos($queryComponents->Uri, '$skiptoken') !== FALSE)||
-           (strpos($queryComponents->Uri, '$select') !== FALSE))
-        {
+           (strpos($queryComponents->Uri, '$select') !== FALSE)) {
             $requestVersion = Resource::DataServiceVersion_2;
         }
 
@@ -686,8 +633,7 @@ class ObjectContext
      * @return QueryOperationResponse
      * @throws DataServiceRequestException
      */
-    public function ExecuteAndProcessResult($httpRequest, $dataServiceVersion)
-    {
+    public function ExecuteAndProcessResult($httpRequest, $dataServiceVersion) {
         $response = $this->ExecuteAndReturnResponse($httpRequest,
                                                     $dataServiceVersion,
                                                     $isError,
@@ -696,8 +642,7 @@ class ObjectContext
                                                              $innerException,
                                                              $response->getCode(),
                                                              $httpRequest->getUri());
-       if($isError)
-       {
+       if($isError) {
            throw new DataServiceRequestException($queryOperationResponse);
        }
 
@@ -720,19 +665,16 @@ class ObjectContext
      * @return HttpResponse
      */
     public function ExecuteAndReturnResponse($httpRequest, $dataServiceVersion,
-                                             &$isError, &$innerException)
-    {
+                                             &$isError, &$innerException) {
         $this->OnBeforeRequestInternal($httpRequest);
         $httpRawResponse ='';
         //need a try catch, because during curl_exec, if curl failed to
         //connet to the OData Service it will throw InvalidOperation
         //exception
-        try
-        {
+        try {
             $httpRawResponse = $httpRequest->GetResponse();
         }
-        catch(InvalidOperation $exception)
-        {
+        catch(InvalidOperation $exception) {
             $isError = true;
             $innerException = $exception->getError() .
                               $exception->getDetailedError();
@@ -744,17 +686,12 @@ class ObjectContext
         $isError = $httpResponse->IsError();
         $headers = $httpResponse->getHeaders();
 
-        if($isError)
-        {
-            if(isset($headers[HttpRequestHeader::ContentType]))
-            {
+        if($isError) {
+            if(isset($headers[HttpRequestHeader::ContentType])) {
                 if(strpos(strtolower($headers[HttpRequestHeader::ContentType]),
-                   strtolower(Resource::Content_Type_ATOM)) !== FALSE)
-                {
+                   strtolower(Resource::Content_Type_ATOM)) !== FALSE) {
                     $innerException = $httpResponse->getMessage();
-                }
-                else
-                {
+                } else {
                     $outerError = $innerError = null;
                     /*The error string can be in the format: retrive the error
                     <?xml version="1.0" encoding="utf-8" standalone="yes"?>
@@ -767,16 +704,13 @@ class ObjectContext
                                                 $innerError);
                     $innerException = $outerError . "<br/>" . $innerError;
                 }
-            }
-            else
-            {
+            } else {
                 $innerException = $httpResponse->getMessage();
             }
         }
 
         if(isset($headers['Dataserviceversion']) &&
-        ((int)$headers['Dataserviceversion'] > (int)$dataServiceVersion))
-        {
+        ((int)$headers['Dataserviceversion'] > (int)$dataServiceVersion)) {
             $isError = true;
             $innerException = Resource::VersionMisMatch .
                               $headers['Dataserviceversion'];
@@ -791,8 +725,7 @@ class ObjectContext
      *
      * @param $resourceBoxOrRelatedEnd ResourceBox or RelatedEnd
      */
-    protected function IncrementChange($resourceBoxOrRelatedEnd)
-    {
+    protected function IncrementChange($resourceBoxOrRelatedEnd) {
         $resourceBoxOrRelatedEnd->ChangeOrder = ++$this->nextChange;
     }
 
@@ -804,46 +737,39 @@ class ObjectContext
      * @param  $relatedEnd The RelatedEnd
      * @throws InvalidOperation
      */
-     protected function ValidateAddLink($relatedEnd)
-     {
+     protected function ValidateAddLink($relatedEnd) {
         $sourceObject = $relatedEnd->GetSourceResource();
         $sourceProperty = $relatedEnd->GetSourceProperty();
         $targetObject = $relatedEnd->GetTargetResource();
         $sourceResourceBox = null;
-        if (!$this->ObjectToResource->TryGetValue($sourceObject, $sourceResourceBox))
-        {
+        if (!$this->ObjectToResource->TryGetValue($sourceObject, $sourceResourceBox)) {
              throw new InvalidOperation(Resource::EntityNotContained,
                                         Resource::EntityNotContained_Details);
         }
 
         $targetResourceBox = null;
-        if (!$this->ObjectToResource->TryGetValue($targetObject, $targetResourceBox))
-        {
+        if (!$this->ObjectToResource->TryGetValue($targetObject, $targetResourceBox)) {
              throw new InvalidOperation(Resource::EntityNotContained,
                                         Resource::EntityNotContained_Details);
         }
 
         if (($sourceResourceBox->State == EntityStates::Deleted) ||
             (($targetResourceBox != null) &&
-             ($targetResourceBox->State == EntityStates::Deleted)))
-        {
+             ($targetResourceBox->State == EntityStates::Deleted))) {
             throw new InvalidOperation(Resource::NoRelationWithDeleteEnd,
                                        Resource::NoRelationWithDeleteEnd_Details);
 
         }
 
-        if ($this->Bindings->ContainsKey($relatedEnd))
-        {
+        if ($this->Bindings->ContainsKey($relatedEnd)) {
             throw new InvalidOperation(Resource::RelationAlreadyContained,
                                        Resource::RelationAlreadyContained_Details);
         }
 
-        try
-        {
+        try {
             $property = new ReflectionProperty($sourceObject, $sourceProperty);
         }
-        catch(ReflectionException $ex)
-        {
+        catch(ReflectionException $ex) {
             throw new InvalidOperation(Resource::NoPropertyForTargetObject,
                                        sprintf(Resource::NoPropertyForTargetObject_Details,
                                                $sourceProperty));
@@ -853,13 +779,11 @@ class ObjectContext
         if(!isset($attributes['Relationship']) ||
            !isset($attributes['ToRole']) ||
            !isset($attributes['FromRole'])||
-           !isset($attributes['Type']))
-        {
+           !isset($attributes['Type'])) {
             throw new InvalidOperation(Resource::NoRelationBetweenObjects, null);
         }
 
-        if($attributes["Type"] != "NavigationProperty")
-        {
+        if($attributes["Type"] != "NavigationProperty") {
             throw new InvalidOperation(Resource::RelationNotRefOrCollection,
                                        sprintf(Resource::RelationNotRefOrCollection_Details,
                                                $sourceProperty));
@@ -867,8 +791,7 @@ class ObjectContext
 
         $relationShip = $this->GetRelationShip($attributes["Relationship"],
                                                $attributes["ToRole"]);
-        if($relationShip != '*')
-        {
+        if($relationShip != '*') {
             throw new InvalidOperation(sprintf(Resource::AddLinkCollectionOnly,
                                                $sourceProperty),
                                        Resource::AddLinkCollectionOnly_Details);
@@ -883,40 +806,34 @@ class ObjectContext
      * @param $relatedEnd The RelatedEnd
      * @throws InvalidOperation
      */
-    protected function ValidateSetLink($relatedEnd)
-    {
+    protected function ValidateSetLink($relatedEnd) {
         $sourceObject = $relatedEnd->GetSourceResource();
         $sourceProperty = $relatedEnd->GetSourceProperty();
         $targetObject = $relatedEnd->GetTargetResource();
         $sourceResourceBox = null;
-        if (!$this->ObjectToResource->TryGetValue($sourceObject, $sourceResourceBox))
-        {
+        if (!$this->ObjectToResource->TryGetValue($sourceObject, $sourceResourceBox)) {
             throw new InvalidOperation(Resource::EntityNotContained,
                                         Resource::EntityNotContained_Details);
         }
 
         $targetResourceBox = null;
         if((null != $targetObject) && !$this->ObjectToResource->TryGetValue($targetObject,
-                                                                            $targetResourceBox))
-        {
+                                                                            $targetResourceBox)) {
            throw new InvalidOperation(Resource::EntityNotContained,
                                         Resource::EntityNotContained_Details);
         }
 
         if (($sourceResourceBox->State == EntityStates::Deleted) ||
             (($targetResourceBox != null) &&
-             ($targetResourceBox->State == EntityStates::Deleted)))
-        {
+             ($targetResourceBox->State == EntityStates::Deleted))) {
             throw new InvalidOperation(Resource::NoRelationWithDeleteEnd,
                                        Resource::NoRelationWithDeleteEnd_Details);
         }
 
-        try
-        {
+        try {
             $property = new ReflectionProperty($sourceObject, $sourceProperty);
         }
-        catch(ReflectionException $ex)
-        {
+        catch(ReflectionException $ex) {
              throw new InvalidOperation(Resource::NoPropertyForTargetObject,
                                        sprintf(Resource::NoPropertyForTargetObject_Details,
                                                $sourceProperty));
@@ -926,13 +843,11 @@ class ObjectContext
         if(!isset($attributes['Relationship']) ||
            !isset($attributes['ToRole']) ||
            !isset($attributes['FromRole'])||
-           !isset($attributes['Type']))
-        {
+           !isset($attributes['Type'])) {
             throw new InvalidOperation(Resource::NoRelationBetweenObjects, null);
         }
 
-        if($attributes['Type'] != 'NavigationProperty')
-        {
+        if($attributes['Type'] != 'NavigationProperty') {
             throw new InvalidOperation(Resource::RelationNotRefOrCollection,
                                        sprintf(Resource::RelationNotRefOrCollection_Details,
                                                $sourceProperty));
@@ -940,8 +855,7 @@ class ObjectContext
 
         $relationShip = $this->GetRelationShip($attributes['Relationship'],
                                                $attributes['ToRole']);
-        if($relationShip != '0..1' && $relationShip != '1')
-        {
+        if($relationShip != '0..1' && $relationShip != '1') {
             throw new InvalidOperation(sprintf(Resource::SetLinkReferenceOnly,
                                                $sourceProperty),
                                        Resource::SetLinkReferenceOnly_Details);
@@ -956,30 +870,25 @@ class ObjectContext
      * @param $relatedEnd The RelatedEnd
      * @throws InvalidOperation
      */
-    protected function ValidateDeleteLink($relatedEnd)
-    {
+    protected function ValidateDeleteLink($relatedEnd) {
         $sourceObject = $relatedEnd->GetSourceResource();
         $sourceProperty = $relatedEnd->GetSourceProperty();
         $targetObject = $relatedEnd->GetTargetResource();
         $sourceResourceBox = null;
-        if (!$this->ObjectToResource->TryGetValue($sourceObject, $sourceResourceBox))
-        {
+        if (!$this->ObjectToResource->TryGetValue($sourceObject, $sourceResourceBox)) {
             throw new InvalidOperation(Resource::EntityNotContained,
                                         Resource::EntityNotContained_Details);
         }
         $targetResourceBox = null;
-        if (!$this->ObjectToResource->TryGetValue($targetObject, $targetResourceBox))
-        {
+        if (!$this->ObjectToResource->TryGetValue($targetObject, $targetResourceBox)) {
             throw new InvalidOperation(Resource::EntityNotContained,
                                         Resource::EntityNotContained_Details);
         }
 
-        try
-        {
+        try {
             $property = new ReflectionProperty($sourceObject, $sourceProperty);
         }
-        catch(ReflectionException $ex)
-        {
+        catch(ReflectionException $ex) {
              throw new InvalidOperation(Resource::NoPropertyForTargetObject,
                                        sprintf(Resource::NoPropertyForTargetObject_Details,
                                                $sourceProperty));
@@ -989,13 +898,11 @@ class ObjectContext
         if(!isset($attributes["Relationship"]) ||
            !isset($attributes["ToRole"]) ||
            !isset($attributes["FromRole"])||
-           !isset($attributes["Type"]))
-        {
+           !isset($attributes["Type"])) {
             throw new InvalidOperation(Resource::NoRelationBetweenObjects, null);
         }
 
-        if($attributes["Type"] != "NavigationProperty")
-        {
+        if($attributes["Type"] != "NavigationProperty") {
             throw new InvalidOperation(Resource::RelationNotRefOrCollection,
                                        sprintf(Resource::RelationNotRefOrCollection_Details,
                                                $sourceProperty));
@@ -1003,8 +910,7 @@ class ObjectContext
 
         $relationShip = $this->GetRelationShip($attributes["Relationship"],
                                                $attributes["ToRole"]);
-        if($relationShip != '*')
-        {
+        if($relationShip != '*') {
             throw new InvalidOperation(sprintf(Resource::AddLinkCollectionOnly,
                                                $sourceProperty),
                                        Resource::AddLinkCollectionOnly_Details);
@@ -1017,13 +923,10 @@ class ObjectContext
      *
      * @param $resourceBox the ResourceBox
      */
-    protected function DetachRelated($resourceBox)
-    {
+    protected function DetachRelated($resourceBox) {
         $bindingValues = $this->Bindings->Values();
-        foreach($bindingValues as $bindingValue)
-        {
-            if($resourceBox->IsRelatedEntity($bindingValue))
-            {
+        foreach($bindingValues as $bindingValue) {
+            if($resourceBox->IsRelatedEntity($bindingValue)) {
                 $this->DetachExistingLink($bindingValue);
             }
         }
@@ -1035,10 +938,8 @@ class ObjectContext
      *
      * @param $relatedEnd The RelatedEnd
      */
-    protected function DetachExistingLink($relatedEnd)
-    {
-        if ($this->Bindings->Remove($relatedEnd))
-        {
+    protected function DetachExistingLink($relatedEnd) {
+        if ($this->Bindings->Remove($relatedEnd)) {
             $relatedEnd->State = EntityStates::Detached;
             $resourceBox = null;
             $this->ObjectToResource->TryGetValue($relatedEnd->getSourceResource(),
@@ -1058,19 +959,15 @@ class ObjectContext
      * @param Object $target
      * @return RelatedEnd or null
      */
-    protected function DetachReferenceLink($source, $sourceProperty, $target)
-    {
+    protected function DetachReferenceLink($source, $sourceProperty, $target) {
         $bindingValues = $this->Bindings->Values();
-        foreach($bindingValues as $relatedEnd)
-        {
+        foreach($bindingValues as $relatedEnd) {
             if ($relatedEnd->GetSourceResource()->getObjectID() == $source->getObjectID() &&
-                $relatedEnd->GetSourceProperty() == $sourceProperty)
-            {
+                $relatedEnd->GetSourceProperty() == $sourceProperty) {
                 if(((null == $target) && (null == $relatedEnd->GetTargetResource())) ||
                    ((null != $target) && (null != $relatedEnd->GetTargetResource())
                                       && ($target->getObjectID() == $relatedEnd->GetTargetResource()->getObjectID()))
-                )
-                {
+                ) {
                     return $relatedEnd;
                 }
                 $this->DetachExistingLink($relatedEnd);
@@ -1087,14 +984,12 @@ class ObjectContext
      * @param ResourceBox $resourceBox
      * @param string $content_type
      */
-    public function LoadResourceBox($str, $resourceBox, $content_type)
-    {
+    public function LoadResourceBox($str, $resourceBox, $content_type) {
         $resource = $resourceBox->GetResource();
         $uri = null;
         $atomEntry = null;
         AtomParser::PopulateObject($str, $resource, $uri, $atomEntry);
-        if(isset($uri))
-        {
+        if(isset($uri)) {
             $index = Utility::reverseFind($uri, '/');
             $editLink = substr($uri,$index + 1, strlen($uri) - $index);
             $resourceBox->Identity = $uri;
@@ -1122,16 +1017,13 @@ class ObjectContext
      * @return Object The object representing the entity instance
      * @throws InternalError
      */
-    public function AddToObjectToResource($entityType, $atomEntry)
-    {
+    public function AddToObjectToResource($entityType, $atomEntry) {
         $uri = $atomEntry->Identity;
-        if( array_key_exists($uri, $this->IdentityToResource))
-        {
+        if( array_key_exists($uri, $this->IdentityToResource)) {
             return $this->IdentityToResource[$uri]->getResource();
         }
 
-        try
-        {
+        try {
             $class = new ReflectionClass($entityType);
             $resource = $class->newInstance($uri);
             $index = Utility::reverseFind($uri, '/');
@@ -1149,8 +1041,7 @@ class ObjectContext
             $this->IdentityToResource[$uri] = $resourceBox;
             return $resource;
         }
-        catch (ReflectionException $ex)
-        {
+        catch (ReflectionException $ex) {
             throw new InternalError(Resource::InvalidEntityClassName .
                                     $entityType);
         }
@@ -1167,11 +1058,9 @@ class ObjectContext
      * @param string $sourcePropertyName
      * @param Object $object
      */
-    public function AddToBindings($sourceObject, $sourcePropertyName, $object)
-    {
+    public function AddToBindings($sourceObject, $sourcePropertyName, $object) {
         $binding = new RelatedEnd($sourceObject, $sourcePropertyName, $object);
-        if ($this->Bindings->ContainsKey($binding) == FALSE)
-        {
+        if ($this->Bindings->ContainsKey($binding) == FALSE) {
             $binding->State = EntityStates::Unchanged;
             $this->Bindings->Add($binding, $binding);
         }
@@ -1185,20 +1074,16 @@ class ObjectContext
      * @param string $from
      * @throws InvalidOperation
      */
-    protected function ThrowExceptionIfNotValidObject($object, $from)
-    {
-        if(is_object($object))
-        {
-            if (is_a($object, 'Object'))
-            {
+    protected function ThrowExceptionIfNotValidObject($object, $from) {
+        if(is_object($object)) {
+            if (is_a($object, 'Object')) {
                 return;
             }
         }
 
         $message;
         $message_details = null;
-        switch($from)
-        {
+        switch($from) {
             case 'AddObject':
                 $message = Resource::AddInvalidObject;
                 $message_details = Resource::AddInvalidObject_Details;
@@ -1244,16 +1129,14 @@ class ObjectContext
      * @param string $headerName The custom header name
      * @param string $HeaderValue The custom header value
      */
-    public function addHeader($headerName, $headerValue)
-    {
+    public function addHeader($headerName, $headerValue) {
         $this->CustomHeaders[$headerName] = $headerValue;
     }
 
     /**
      * To clear the array holding custom headers.
      */
-    public function removeHeaders()
-    {
+    public function removeHeaders() {
         unset($this->CustomHeaders);
     }
 
@@ -1263,8 +1146,7 @@ class ObjectContext
      *
      * @Return string
      */
-    public function GetBaseUri()
-    {
+    public function GetBaseUri() {
         return $this->_baseURI;
     }
 
@@ -1273,8 +1155,7 @@ class ObjectContext
      *
      * @Return string
      */
-    public function GetBaseUriWithSlash()
-    {
+    public function GetBaseUriWithSlash() {
         return $this->_baseUriWithSlash;
     }
 
@@ -1283,8 +1164,7 @@ class ObjectContext
     *
     * @return string
     */
-    public function GetBaseUriWithOutSlash()
-    {
+    public function GetBaseUriWithOutSlash() {
         return rtrim($this->_baseUriWithSlash, '/');
     }
 
@@ -1295,8 +1175,7 @@ class ObjectContext
      * @param string $entityType The Entity Type
      * @return string
      */
-    public function GetEntitySetNameFromType($entityType)
-    {
+    public function GetEntitySetNameFromType($entityType) {
         $entitySet = isset($this->_entityType2Set[strtolower($entityType)])?
                            $this->_entityType2Set[strtolower($entityType)] :
                            $entityType;
@@ -1310,8 +1189,7 @@ class ObjectContext
      * @param string $entitySet The Entity Set Name
      * @return string
      */
-    public function GetEntityTypeNameFromSet($entitySet)
-    {
+    public function GetEntityTypeNameFromSet($entitySet) {
         $entityType = isset($this->_entitySet2Type[strtolower($entitySet)])?
                             $this->_entitySet2Type[strtolower($entitySet)] :
                             $entitySet;
@@ -1327,11 +1205,9 @@ class ObjectContext
      * @return string
      * @throws InternalError
      */
-    public function GetRelationShip($relationship, $fromOrToRole)
-    {
+    public function GetRelationShip($relationship, $fromOrToRole) {
          if(!isset($this->_association[$relationship]) ||
-            !isset($this->_association[$relationship][$fromOrToRole]))
-         {
+            !isset($this->_association[$relationship][$fromOrToRole])) {
             throw new InternalError("Invalid RelationShip ($relationship) :
                                      'From' or 'ToRole' ($fromOrToRole)");
          }
@@ -1346,11 +1222,9 @@ class ObjectContext
      * @return uri
      * @throws InvalidOperation
      */
-    public function GetReadStreamUri($entity)
-    {
+    public function GetReadStreamUri($entity) {
         $resourceBox = null;
-        if (!$this->ObjectToResource->TryGetValue($entity, $resourceBox))
-        {
+        if (!$this->ObjectToResource->TryGetValue($entity, $resourceBox)) {
             throw new InvalidOperation(Resource::EntityNotContained,
                                        Resource::EntityNotContained_Details);
         }
@@ -1370,36 +1244,26 @@ class ObjectContext
      * @return DataServiceStreamResponse
      * @throws InvalidOperation, ODataServiceException
      */
-    public function GetReadStream($entity, $args = null)
-    {
+    public function GetReadStream($entity, $args = null) {
         $args1 = new DataServiceRequestArgs();
-        if($args == null)
-        {
-        }
-        else if(is_string($args))
-        {
+        if($args == null) {
+        } else if(is_string($args)) {
             $args1->setAcceptContentType($args);
-        }
-        else if(is_object($args) &&
-           is_a($args, 'DataServiceRequestArgs'))
-        {
+        } else if(is_object($args) &&
+           is_a($args, 'DataServiceRequestArgs')) {
             $args1 = $args;
-        }
-        else
-        {
+        } else {
             throw new InvalidOperation(Resource::InvalidArgumentForGetStream, null);
         }
 
         $resourceBox = null;
-        if (!$this->ObjectToResource->TryGetValue($entity, $resourceBox))
-        {
+        if (!$this->ObjectToResource->TryGetValue($entity, $resourceBox)) {
             throw new InvalidOperation(Resource::EntityNotContained,
                                        Resource::EntityNotContained_Details);
         }
 
         $mediaResourceUri = $resourceBox->GetMediaResourceUri($this->_baseUriWithSlash);
-        if ($mediaResourceUri == null)
-        {
+        if ($mediaResourceUri == null) {
             throw new InvalidOperation(Resource::EntityNotMediaLinkEntry, null);
         }
 
@@ -1417,8 +1281,7 @@ class ObjectContext
                                                     $isError,
                                                     $innerException);
 
-        if($isError)
-        {
+        if($isError) {
              throw new ODataServiceException($innerException, '',
                                              $httpResponse->getHeaders(),
                                              $httpResponse->getCode());
@@ -1438,29 +1301,24 @@ class ObjectContext
      * @param HttpRequestHeader::Slug $slug
      * @throws InvalidOperation
      */
-    public function SetSaveStream($entity, $stream, $closeStream, $contentType, $slug)
-    {
-        if(empty($contentType))
-        {
+    public function SetSaveStream($entity, $stream, $closeStream, $contentType, $slug) {
+        if(empty($contentType)) {
             throw new InvalidOperation('SetSaveStream: The contentType' .
                                        Resource::ArgumentNotNull);
         }
 
-        if(empty($slug))
-        {
+        if(empty($slug)) {
             throw new InvalidOperation('SetSaveStream: The slug' .
                                        Resource::ArgumentNotNull);
         }
 
-        if(empty($stream))
-        {
+        if(empty($stream)) {
             throw new InvalidOperation('SetSaveStream: The stream' .
                                        Resource::ArgumentNotNull);
         }
 
         $resourceBox = null;
-        if (!$this->ObjectToResource->TryGetValue($entity, $resourceBox))
-        {
+        if (!$this->ObjectToResource->TryGetValue($entity, $resourceBox)) {
             throw new InvalidOperation(Resource::EntityNotContained,
                                        Resource::EntityNotContained_Details);
         }
@@ -1487,21 +1345,18 @@ class ObjectContext
      */
     public function CreateRequest($requestUri, $httpVerb,
                                    $allowAnyType,  $contentType,
-                                   $dataServiceVersion)
-    {
+                                   $dataServiceVersion) {
 
         $headers = array();
 
         if($this->UsePostTunneling &&
            $httpVerb != HttpVerb::POST &&
-           $httpVerb != HttpVerb::GET)
-        {
+           $httpVerb != HttpVerb::GET) {
             $headers[HttpRequestHeader::XHTTPMethod] = $httpVerb;
             $httpVerb = HttpVerb::POST;
         }
 
-        if($dataServiceVersion == null)
-        {
+        if($dataServiceVersion == null) {
             $dataServiceVersion = Resource::DataServiceVersion_1;
         }
 
@@ -1512,8 +1367,7 @@ class ObjectContext
         $headers['DataServiceVersion'] = $dataServiceVersion;
         $headers['MaxDataServiceVersion'] = Resource::DataServiceVersion_2;
 
-        if($httpVerb !=  HttpVerb::GET)
-        {
+        if($httpVerb !=  HttpVerb::GET) {
             $headers[HttpRequestHeader::ContentType] = $contentType;
         }
 
@@ -1532,16 +1386,13 @@ class ObjectContext
      * @param Uri $location
      * @throws InternalError
      */
-    public function AttachLocation($entity, $location)
-    {
-        if( array_key_exists($location, $this->IdentityToResource))
-        {
+    public function AttachLocation($entity, $location) {
+        if( array_key_exists($location, $this->IdentityToResource)) {
            unset($this->IdentityToResource[$location]);
         }
 
         $resourceBox = null;
-        if (!$this->ObjectToResource->TryGetValue($entity, $resourceBox))
-        {
+        if (!$this->ObjectToResource->TryGetValue($entity, $resourceBox)) {
             throw new InternalError(Resource::AttachLocationFailedDescRetrieval);
         }
 
@@ -1558,8 +1409,7 @@ class ObjectContext
      * @param string $function_name
      * @param object $class_instance
      */
-    public function OnBeforeRequest($function_name, $class_instance)
-    {
+    public function OnBeforeRequest($function_name, $class_instance) {
         $this->_onBefore_cb_instance	= $class_instance;
 	$this->_onBefore_cb_function	= $function_name;
     }
@@ -1570,8 +1420,7 @@ class ObjectContext
      * @param string $function_name
      * @param object $class_instance
      */
-    public function OnAfterResponse($function_name, $class_instance)
-    {
+    public function OnAfterResponse($function_name, $class_instance) {
         $this->_onAfter_cb_instance	= $class_instance;
 	$this->_onAfter_cb_function	= $function_name;
     }
@@ -1582,8 +1431,7 @@ class ObjectContext
      *
      * @param HttpRequest $httpRequest
      */
-    public function OnBeforeRequestInternal($httpRequest)
-    {
+    public function OnBeforeRequestInternal($httpRequest) {
         $this->InvokeCallBack($this->_onBefore_cb_instance,
                               $this->_onBefore_cb_function,
                               $httpRequest);
@@ -1595,8 +1443,7 @@ class ObjectContext
      *
      * @param HttpResponse $httpResponse
      */
-    public function OnAfterResponseInternal($httpResponse)
-    {
+    public function OnAfterResponseInternal($httpResponse) {
         $this->InvokeCallBack($this->_onAfter_cb_instance,
                               $this->_onAfter_cb_function,
                               $httpResponse);
@@ -1611,29 +1458,22 @@ class ObjectContext
      * @param HttpRequest/HttpResponse $param
      * @throws InvalidOperation
      */
-    protected function InvokeCallBack($instance, $function, $param)
-    {
-        try
-    	{
-            if($function)
-            {
-		if($instance)
-		{
+    protected function InvokeCallBack($instance, $function, $param) {
+        try {
+            if($function) {
+		if($instance) {
                     $class = new ReflectionClass(get_class($instance));
                     $method = $class->getMethod($function);
                     $method->Invoke($instance, $param);
-		}
-		else
-		{
+		} else {
                     $func = new ReflectionFunction($function);
                     $func->Invoke($param);
 		}
             }
     	}
-    	catch(ReflectionException $exception)
-    	{
+    	catch(ReflectionException $exception) {
     		throw new InvalidOperation($exception->getMessage());
     	}
     }
 }
-?>
+

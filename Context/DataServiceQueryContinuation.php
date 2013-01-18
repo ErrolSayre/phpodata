@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class DataServiceQueryContinuation
-{
+class DataServiceQueryContinuation {
     /**
      * next link uri to the next set of entities.
      *
@@ -33,8 +32,7 @@ class DataServiceQueryContinuation
      *
      * @param Uri $nextLinkUri
      */
-    public function DataServiceQueryContinuation($nextLinkUri)
-    {
+    public function DataServiceQueryContinuation($nextLinkUri) {
         $this->_nextLinkUri = $nextLinkUri;
     }
 
@@ -43,8 +41,7 @@ class DataServiceQueryContinuation
      *
      * @return Uri
      */
-    public function ToString()
-    {
+    public function ToString() {
 	return $this->_nextLinkUri;
     }
 
@@ -53,8 +50,7 @@ class DataServiceQueryContinuation
      *
      * @return Uri
      */
-    public function getNextLinkUri()
-    {
+    public function getNextLinkUri() {
 	return $this->_nextLinkUri;
     }
 
@@ -63,9 +59,8 @@ class DataServiceQueryContinuation
      *
      * @return QueryComponents
      */
-    public function CreateQueryComponents()
-    {
+    public function CreateQueryComponents() {
         return new QueryComponents($this->_nextLinkUri, null);
     }
 }
-?>
+

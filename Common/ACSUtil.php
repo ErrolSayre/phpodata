@@ -36,132 +36,116 @@ require_once $PHPOData_Path.'/Exception/InvalidOperation.php';
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class ACSUtil
-{
-    protected $_service_namespace;
-    protected $_wrap_name;
-    protected $_wrap_password;
-    protected $_wrap_scope;
-    protected $_claims;
-    protected $_proxy;
-    protected $_token;
+class ACSUtil {
+	protected $_service_namespace;
+	protected $_wrap_name;
+	protected $_wrap_password;
+	protected $_wrap_scope;
+	protected $_claims;
+	protected $_proxy;
+	protected $_token;
 
-    /**
-     * Construct ACSUtil instance.
-     *
-     * @param $service_namespace The Service namespace
-     * @param $wrap_name The user name
-     * @param $wrap_password The password i.e. issuer key
-     * @param $wrap_scope Applies To
-     * @param $claims array of claims
-     * @param <HttpProxy> $proxy
-     */
-    public function ACSUtil($service_namespace, $wrap_name,
-                            $wrap_password, $wrap_scope,
-                            $claims = array(), $proxy = null)
-    {
-        $this->_service_namespace = $service_namespace;
-        $this->_wrap_name = $wrap_name;
-        $this->_wrap_password = $wrap_password;
-        $this->_wrap_scope = $wrap_scope;
-        $this->_claims = $claims;
-        $this->_proxy = $proxy;
-    }
+	/**
+	 * Construct ACSUtil instance.
+	 *
+	 * @param $service_namespace The Service namespace
+	 * @param $wrap_name The user name
+	 * @param $wrap_password The password i.e. issuer key
+	 * @param $wrap_scope Applies To
+	 * @param $claims array of claims
+	 * @param <HttpProxy> $proxy
+	 */
+	public function ACSUtil($service_namespace, $wrap_name,
+		$wrap_password, $wrap_scope,
+		$claims = array(), $proxy = null) {
+		$this->_service_namespace = $service_namespace;
+		$this->_wrap_name = $wrap_name;
+		$this->_wrap_password = $wrap_password;
+		$this->_wrap_scope = $wrap_scope;
+		$this->_claims = $claims;
+		$this->_proxy = $proxy;
+	}
 
-    /**
-     * To create authorization header.
-     *
-     * @return <array>
-     */
-    public function GetSingedHeaders()
-    {
-        $this->GetACSToken();
-        return array('authorization' => 'WRAP access_token="' .
-                                        urldecode($this->_token) . '"');
-    }
+	/**
+	 * To create authorization header.
+	 *
+	 * @return <array>
+	 */
+	public function GetSingedHeaders() {
+		$this->GetACSToken();
+		return array('authorization' => 'WRAP access_token="' .
+			urldecode($this->_token) . '"');
+	}
 
-    /**
-     * To set the proxy.
-     *
-     * @param <HttpProxy> $proxy
-     */
-    public function SetProxy($proxy)
-    {
-        $this->_proxy = $proxy;
-    }
+	/**
+	 * To set the proxy.
+	 *
+	 * @param <HttpProxy> $proxy
+	 */
+	public function SetProxy($proxy) {
+		$this->_proxy = $proxy;
+	}
 
-    /**
-     *
-     * @return <boolean>
-     */
-    public function HasProxy()
-    {
-        return isset($this->_proxy);
-    }
+	/**
+	 *
+	 * @return <boolean>
+	 */
+	public function HasProxy() {
+		return isset($this->_proxy);
+	}
 
-    /**
-     * To get toekn from ACS.
-     *
-     * @return <string>
-     * @throws ACSUtilException
-     */
-    public function GetACSToken()
-    {
-        $postBody = 'wrap_name' .     '=' . urlencode($this->_wrap_name) . '&' .
-                    'wrap_password' . '=' . urlencode($this->_wrap_password) . '&' .
-                    'wrap_scope'    . '=' . $this->_wrap_scope;
-        foreach ($this->_claims  as $key => $value)
-        {
-        	$postBody  = $postBody . '&' . $key . '=' . $value;
-        }
+	/**
+	 * To get toekn from ACS.
+	 *
+	 * @return <string>
+	 * @throws ACSUtilException
+	 */
+	public function GetACSToken() {
+		$postBody = 'wrap_name' .     '=' . urlencode($this->_wrap_name) . '&' .
+			'wrap_password' . '=' . urlencode($this->_wrap_password) . '&' .
+			'wrap_scope'    . '=' . $this->_wrap_scope;
+		foreach ($this->_claims  as $key => $value) {
+			$postBody  = $postBody . '&' . $key . '=' . $value;
+		}
 
-    	$url = 'https://' . $this->_service_namespace . '.' .
-               'accesscontrol.windows.net' . '/' . 'WRAPv0.9';
-    	$httpRequest = new HttpRequest(HttpVerb::POST, $url, null,
-                                       $this->_proxy, array(), $postBody,
-                                       false);
-    	$httpRawResponse = null;
-    	try
-    	{
-    		$httpRawResponse = $httpRequest->GetResponse();
-    	}
-    	catch(InvalidOperation $exception)
-    	{
-    		throw new ACSUtilException($exception->getError(), array(), null);
-    	}
+		$url = 'https://' . $this->_service_namespace . '.' .
+			'accesscontrol.windows.net' . '/' . 'WRAPv0.9';
+		$httpRequest = new HttpRequest(HttpVerb::POST, $url, null,
+			$this->_proxy, array(), $postBody,
+			false);
+		$httpRawResponse = null;
+		try {
+			$httpRawResponse = $httpRequest->GetResponse();
+		} catch(InvalidOperation $exception) {
+			throw new ACSUtilException($exception->getError(), array(), null);
+		}
 
-    	$httpResponse = HttpResponse::fromString($httpRawResponse);
-        if($httpResponse->isError())
-        {
-        	throw new ACSUtilException($httpResponse->getMessage() .
-                                           '<br/>' .
-                                           $httpResponse->getBody(),
-                                           $httpResponse->getHeaders(),
-                                           $httpResponse->getCode());
-        }
+		$httpResponse = HttpResponse::fromString($httpRawResponse);
+		if ($httpResponse->isError()) {
+			throw new ACSUtilException($httpResponse->getMessage() .
+				'<br/>' .
+				$httpResponse->getBody(),
+				$httpResponse->getHeaders(),
+				$httpResponse->getCode());
+		}
 
-        $this->_token = $httpResponse->getBody();
-        if (strpos($this->_token, 'Error') !== false)
-        {
-            throw new ACSUtilException('Invalid Token received:' . $this->_token,
-                                       array(),
-                                       null);
-        }
+		$this->_token = $httpResponse->getBody();
+		if (strpos($this->_token, 'Error') !== false) {
+			throw new ACSUtilException('Invalid Token received:' . $this->_token,
+				array(),
+				null);
+		}
 
-        $params = explode('&', $this->_token);
-        if (isset($params[0]) && strpos($params[0], 'wrap_access_token') === 0)
-        {
-                $parts = explode('=', $params[0]);
-                $this->_token = $parts[1];
-        }
-        else
-        {
-        	throw new ACSUtilException('Invalid Token received:' . $this->token,
-                                           array(),
-                                           null);
-        }
+		$params = explode('&', $this->_token);
+		if (isset($params[0]) && strpos($params[0], 'wrap_access_token') === 0) {
+			$parts = explode('=', $params[0]);
+			$this->_token = $parts[1];
+		} else {
+			throw new ACSUtilException('Invalid Token received:' . $this->token,
+				array(),
+				null);
+		}
 
-        return $this->_token;
-    }
+		return $this->_token;
+	}
 }
-?>

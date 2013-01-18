@@ -26,8 +26,7 @@ require_once dirname(dirname(__FILE__)).'/Credential/CredentialBase.php';
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class WindowsCredential extends CredentialBase
-{
+class WindowsCredential extends CredentialBase {
     private $_userName;
     private $_password;
 
@@ -37,8 +36,7 @@ class WindowsCredential extends CredentialBase
      * @param string $userName The doamin and username in the form domain/username
      * @return string  $password The Password
      */
-    public function WindowsCredential($userName, $password)
-    {
+    public function WindowsCredential($userName, $password) {
         $this->_userName = $userName;
         $this->_password = $password;
     }
@@ -47,8 +45,7 @@ class WindowsCredential extends CredentialBase
      * Get domainname\username    .
      *
      */
-    public function getUserName()
-    {
+    public function getUserName() {
         return $this->_userName;
     }
 
@@ -56,8 +53,7 @@ class WindowsCredential extends CredentialBase
      * Get password.
      *
      */
-    public function getPassword()
-    {
+    public function getPassword() {
         return $this->_password;
     }
 
@@ -66,8 +62,7 @@ class WindowsCredential extends CredentialBase
      *
      * @param HttpProxy $proxy
      */
-    public function SetProxy($proxy)
-    {
+    public function SetProxy($proxy) {
         //dummy
     }
 
@@ -76,8 +71,7 @@ class WindowsCredential extends CredentialBase
      *
      * @param Url $requestUrl
      */
-    public function GetSingedHeaders($requestUrl)
-    {
+    public function GetSingedHeaders($requestUrl) {
         //dummy
     }
 
@@ -86,9 +80,7 @@ class WindowsCredential extends CredentialBase
      *
      * @return CredentailType::*
      */
-    public function getCredentialType()
-    {
+    public function getCredentialType() {
         return CredentialType::WINDOWS;
     }
 };
-?>

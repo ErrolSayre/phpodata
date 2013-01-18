@@ -26,8 +26,7 @@ require_once dirname(dirname(__FILE__)).'/Extras/WCFDataServicesEntity.php';
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class WCFDataServicesEditor
-{
+class WCFDataServicesEditor {
     protected $_containerName;
     protected $_containerScriptName;
     protected $_http_proxy_host;
@@ -49,8 +48,7 @@ class WCFDataServicesEditor
      * @param string $password password for authenticating WCF Data Service.
      */
     public function WCFDataServicesEditor($containerScriptName, $containerName, $enablePaging = false, $pageSize = 5, $serviceUri = "",
-        $http_proxy_host = "", $http_proxy_port = "", $userName = "", $password = "")
-    {
+        $http_proxy_host = "", $http_proxy_port = "", $userName = "", $password = "") {
         $this->_containerScriptName = $containerScriptName;
         $this->_containerName = $containerName;
         $this->_serviceUri = $serviceUri;
@@ -65,8 +63,7 @@ class WCFDataServicesEditor
     /**
      * This function displays the editor
      */
-    public function show()
-    {
+    public function show() {
 ?>
 <html>
     <head>
@@ -95,65 +92,46 @@ class WCFDataServicesEditor
                         $serviceUri = '';
                         $query = '';
 
-                        if (isset($_GET['serviceUri']))
-                        {
+                        if (isset($_GET['serviceUri'])) {
                             $serviceUri = $_GET['serviceUri'];
                         }
 
-                        if (isset($_GET['query']))
-                        {
+                        if (isset($_GET['query'])) {
                             $query = $_GET['query'];
                         }
 
-                        if (isset($_POST['btnResult']) == 1)
-                        {
+                        if (isset($_POST['btnResult']) == 1) {
                             $serviceUri = $_POST['txtUri'];
                             $query = $_POST['txtQuery'];
                         }
 
-                        if ($serviceUri != '' || $query != '')
-                        {
+                        if ($serviceUri != '' || $query != '') {
                             $getResult = new WCFDataServicesEntity($this->_containerScriptName, $this->_containerName, $this->_enablePaging, $this->_pageSize, $serviceUri, $query,
                                              $this->_proxy, $this->_port, $this->_userName, $this->_password);
-                            if (isset($_POST['btnDelete']))
-                            {
+                            if (isset($_POST['btnDelete'])) {
                                 $getResult->Delete($_POST, $_GET['Type']);
-                            }
-                            else if (isset($_POST['btnUpdate']))
-                            {
+                            } else if (isset($_POST['btnUpdate'])) {
                                 $getResult->Update($_POST, $_GET['Type']);
-                            }
-                            else if (isset($_POST['btnSave']))
-                            {
+                            } else if (isset($_POST['btnSave'])) {
                                 $getResult->Insert($_POST, $_GET['Type']);
-                            }
-                            else if (isset($_POST['btnAddLink']))
-                            {
+                            } else if (isset($_POST['btnAddLink'])) {
                                 $attachQuery = str_replace("\'", "'", $_GET['AttachQuery']);
                                 $getResult->AddLink($_POST, $_GET['Type'], $attachQuery);
                             }
                             $getResult->display();
 
-                            if (isset($_POST['btnDetail']))
-                            {
-                                if (isset($_GET['changeId']))
-                                {
+                            if (isset($_POST['btnDetail'])) {
+                                if (isset($_GET['changeId'])) {
                                     $changeId = str_replace("\'", "'", $_GET['changeId']);
                                     $getResult->displayDetails($changeId, $_GET['Type']);
                                 }
-                            }
-                            else if (isset($_POST['btnAdd']))
-                            {
+                            } else if (isset($_POST['btnAdd'])) {
                                 $getResult->displayAdd($_GET['Type']);
-                            }
-                            else if (isset($_GET['AttachTo']))
-                            {
+                            } else if (isset($_GET['AttachTo'])) {
                                 $attachTo = str_replace("\'", "'", $_GET['AttachTo']);
                                 $getResult->displayAddLink($_GET['Type'], $attachTo);
                             }
-                        }
-                        else
-                        {
+                        } else {
                             $getResult = new WCFDataServicesEntity($this->_containerScriptName, $this->_containerName, $this->_enablePaging, $this->_pageSize, $this->_serviceUri, '',
                                              $this->_proxy, $this->_port, $this->_userName, $this->_password);
                             $getResult->display();
@@ -168,4 +146,3 @@ class WCFDataServicesEditor
 <?php
     }
 }
-?>

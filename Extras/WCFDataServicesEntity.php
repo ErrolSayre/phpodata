@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class WCFDataServicesEntity
-{
+class WCFDataServicesEntity {
     protected $_containerScriptName;
     protected $_uri = "";
     protected $_query = "";
@@ -34,8 +33,7 @@ class WCFDataServicesEntity
      * @param string $uri The data service url.
      * @param string $query The query to execute.
      */
-    public function  __construct($containerScriptName, $className, $enablePaging, $pageSize, $uri, $query, $proxy ="", $port = "", $userName = "", $password = "")
-    {
+    public function  __construct($containerScriptName, $className, $enablePaging, $pageSize, $uri, $query, $proxy ="", $port = "", $userName = "", $password = "") {
         $this->_containerScriptName = $containerScriptName;
         $this->_uri = $uri;
         $this->_query = $query;
@@ -43,12 +41,10 @@ class WCFDataServicesEntity
         $this->_enablePaging = $enablePaging;
         $class = new ReflectionClass($className);
         $this->_proxyObject = $class->newInstance($this->_uri);
-        if (strlen($proxy) != 0)
-        {
+        if (strlen($proxy) != 0) {
             $this->_proxyObject->HttpProxy = new HttpProxy($proxy, $port);
         }
-        if (!empty($userName) && !(empty($password)))
-        {
+        if (!empty($userName) && !(empty($password))) {
             $this->_proxyObject->Credential = new Credential($userName, $password);
         }
     }
@@ -60,14 +56,10 @@ class WCFDataServicesEntity
      * any query then this function will display
      * all entities in the data service.
      */
-    public function display()
-    {
-        if ($this->_query == '')
-        {
+    public function display() {
+        if ($this->_query == '') {
             WCFDataServicesEntity::displayEntities();
-        }
-        else
-        {
+        } else {
             WCFDataServicesEntity::displayEntityData();
         }
     }
@@ -75,8 +67,7 @@ class WCFDataServicesEntity
     /**
      * Fucntion to display result of query.
      */
-    protected function displayEntityData()
-    {
+    protected function displayEntityData() {
 
         $this->_query = str_replace("\'", "'", $this->_query);
         $queryToRun = $this->_query;
@@ -84,28 +75,22 @@ class WCFDataServicesEntity
         $nextSkip = null;
         $canPage = false;
         if($this->_enablePaging && (isset($_REQUEST['pagingAllowed']) &&
-                                    $_REQUEST['pagingAllowed'] == 'true'))
-        {
+                                    $_REQUEST['pagingAllowed'] == 'true')) {
             $canPage = true;
             $skip = 0;
-            if(isset($_REQUEST['skip']))
-            {
+            if(isset($_REQUEST['skip'])) {
                 $skip = $_REQUEST['skip'];
             }
 
             $parts = parse_url($queryToRun);
-            if(isset($parts['query']))
-            {
+            if(isset($parts['query'])) {
                 $queryToRun .= '&$top='.$this->_pageSize.'&$skip=' . $skip;
-            }
-            else
-            {
+            } else {
                 $queryToRun .= '?$top='.$this->_pageSize.'&$skip=' . $skip;
             }
 
             $nextSkip = $skip + $this->_pageSize;
-            if($nextSkip != $this->_pageSize)
-            {
+            if($nextSkip != $this->_pageSize) {
                 $prev = $skip - $this->_pageSize;
                 $pagingSection .= "<td><a href=\"" . $this->_containerScriptName
                                     . "?query="
@@ -121,38 +106,31 @@ class WCFDataServicesEntity
         $response = $this->_proxyObject->Execute($queryToRun);
         $resultSet = $response->Result;
         echo "<br><br><table style=\"border: thin solid #C0C0C0;\" border=\"1\">";
-        if (count($resultSet) > 0)
-        {
+        if (count($resultSet) > 0) {
             $propertyArray = WCFDataServicesEntity::getProperties($resultSet[0]);
             $this->displayHeader($propertyArray, $resultSet[0]);
-            foreach ($resultSet as $result)
-            {
+            foreach ($resultSet as $result) {
                 echo "<tr style=\"font-family: Calibri; "
                      . "background-color: #CCFFFF\">";
                 WCFDataServicesEntity::getDetailButtonText($result);
-                foreach ($propertyArray as $property)
-                {
+                foreach ($propertyArray as $property) {
                     $prop = new ReflectionProperty($result, $property);
                     $propertyAttributes = Utility::getAttributes($prop);
-                    if ($propertyAttributes['Type'] == 'NavigationProperty')
-                    {
+                    if ($propertyAttributes['Type'] == 'NavigationProperty') {
                         $pagingAllowed = 'pagingAllowed=true';
                         $relationShip = $this->_proxyObject->GetRelationShip($propertyAttributes["Relationship"],
                                                                $propertyAttributes["ToRole"]);
-                        if($relationShip != '*')
-                        {
+                        if($relationShip != '*') {
                             $pagingAllowed = 'pagingAllowed=false';
                         }
 
                         $skip = null;
-                        if(isset($_REQUEST['skip']))
-                        {
+                        if(isset($_REQUEST['skip'])) {
                             $skip = '&skip=' . $_REQUEST['skip'];
                         }
 
                         $pagingAllowedWhileAttaching = null;
-                        if(isset($_GET['pagingAllowed']))
-                        {
+                        if(isset($_GET['pagingAllowed'])) {
                             $pagingAllowedWhileAttaching =
                                 '&pagingAllowed=' . $_GET['pagingAllowed'];
                         }
@@ -182,20 +160,15 @@ class WCFDataServicesEntity
                              . $finalQuery
                              . "\">  Add Link </a>";
                         echo "</td>";
-                    }
-                    else
-                    {
+                    } else {
                         $propertyAttributes = Utility::getAttributes($prop);
                         if(isset($propertyAttributes['EdmType']) &&
-                        ($index = strpos($propertyAttributes['EdmType'], 'Edm.')) !== 0)
-
-                        {
+                        ($index = strpos($propertyAttributes['EdmType'], 'Edm.')) !== 0) {
                             $value = $prop->getValue($result);
                             $type = ClientType::Create(get_class($value));
                             $nonEpmProperties = $type->getRawNonEPMProperties(true);
                             echo '<td><table style="border: thin solid #C0C0C0;" border="1">';
-                            foreach($nonEpmProperties as $nonEpmProperty)
-                            {
+                            foreach($nonEpmProperties as $nonEpmProperty) {
                                 $propertyName = $nonEpmProperty->getName();
                                 $refProperty = new ReflectionProperty($value, $propertyName);
                                 $propertyValue = $refProperty->getValue($value);
@@ -204,20 +177,14 @@ class WCFDataServicesEntity
                                 echo '</td></tr>';
                             }
                             echo '</table></td>';
-                        }
-                        else
-                        {
+                        } else {
                             if (Utility::ContainAttribute($prop->getDocComment(),
-                                                     'Binary'))
-                            {
+                                                     'Binary')) {
                                 // TODO: Display image in the cell
                                 echo "<td>Image</td>";
-                            }
-                            else
-                            {
+                            } else {
                                 $value = $prop->getValue($result);
-                                if ($value == '')
-                                {
+                                if ($value == '') {
                                     $value = 'null';
                                 }
                                 echo "<td>"
@@ -230,8 +197,7 @@ class WCFDataServicesEntity
                 echo "</tr>";
             }
 
-            if($canPage)
-            {
+            if($canPage) {
                  $pagingSection .= "<td><a href=\"" . $this->_containerScriptName
                                     . "?query="
                                     . $this->_query
@@ -243,8 +209,7 @@ class WCFDataServicesEntity
             }
         }
 
-        if($canPage)
-        {
+        if($canPage) {
             echo $pagingSection;
         }
         echo "</table><br><br>";
@@ -257,17 +222,14 @@ class WCFDataServicesEntity
      * @param array $propertyArray The collection of Property Names.
      * @param $obj The entity instance.
      */
-    protected function displayHeader($propertyArray, $obj)
-    {
+    protected function displayHeader($propertyArray, $obj) {
         $pagingAllowed = null;
-        if($this->_enablePaging && isset($_REQUEST['pagingAllowed']))
-        {
+        if($this->_enablePaging && isset($_REQUEST['pagingAllowed'])) {
             $pagingAllowed = "<input type=\"hidden\" name=\"pagingAllowed\" value=\"".$_REQUEST['pagingAllowed']."\">";
         }
 
         $skip = null;
-        if(isset($_REQUEST['skip']))
-        {
+        if(isset($_REQUEST['skip'])) {
             $skip = "<input type=\"hidden\" name=\"skip\" value=\"".$_REQUEST['skip']."\">";
         }
 
@@ -298,8 +260,7 @@ class WCFDataServicesEntity
         echo "<tr style=\"font-family: Calibri; "
              . "background-color: #99CCFF\"><td></td>";
 
-        foreach ($propertyArray as $property)
-        {
+        foreach ($propertyArray as $property) {
             echo "<td>" . $property . "</td>";
         }
         echo "</tr>";
@@ -308,15 +269,13 @@ class WCFDataServicesEntity
     /**
      * Fucntion to display all entities in the data service.
      */
-    protected function displayEntities()
-    {
+    protected function displayEntities() {
         $enities = $this->_proxyObject->getEntities();
         echo "<br><br><table align=\"center\" style=\"font-family: Calibri; "
              . "width: 95%\">";
         echo "<tr><td align=\"center\" style=\"font-family: Calibri; "
              . "background-color: #97CC00\">Entities</td></tr>";
-        foreach ($enities as $entity)
-        {
+        foreach ($enities as $entity) {
             echo "<tr ><td style=\"font-family: Calibri; "
                  . "background-color: #99CCFF\" border=\"1\">";
             echo "<a href=\"" . $this->_containerScriptName . "?query="
@@ -339,14 +298,12 @@ class WCFDataServicesEntity
      * @return array $propertyArray The collection of
      * properties.
      */
-    protected function getProperties($obj)
-    {
+    protected function getProperties($obj) {
         $class = new ReflectionClass(get_class($obj));
         $properties = $class->getProperties();
         $propertyArray = array();
 
-        foreach ($properties as $property)
-        {
+        foreach ($properties as $property) {
             $pos1 = strpos($property, "$");
             $tmp  = substr($property, $pos1 + 1);
             $pos2 = strpos($tmp, " ");
@@ -355,8 +312,7 @@ class WCFDataServicesEntity
                 && $propertyName != '_entityKey'
                 && $propertyName != '_baseURI'
                 && $propertyName != '_relLinks'
-                && $propertyName != '_objectID')
-            {
+                && $propertyName != '_objectID') {
                 $propertyArray[] = $propertyName;
             }
         }
@@ -369,53 +325,42 @@ class WCFDataServicesEntity
      * @return string $returnQuery the query representing
      * the navigation object.
      */
-    protected function formQueryForNavigationProperty($obj)
-    {
+    protected function formQueryForNavigationProperty($obj) {
         $entityKey = $obj->entityKey[0];
         $prop = new ReflectionProperty($obj, $entityKey);
         $value = $prop->getValue($obj);
         $returnQuery = "";
         $edmType = Utility::GetPropertyType($prop, $notNullable);
-        if(strcmp($edmType, "Edm.String") == 0)
-        {
+        if(strcmp($edmType, "Edm.String") == 0) {
             $returnQuery = $this->_query . "('" . $value . "')/";
-        }
-        else
-        {
+        } else {
             $returnQuery = $this->_query . "(" . $value . ")/";
         }
         return $returnQuery;
     }
 
-    protected function getDetailButtonText($obj)
-    {
+    protected function getDetailButtonText($obj) {
         $pagingAllowed = null;
-        if($this->_enablePaging && isset($_REQUEST['pagingAllowed']))
-        {
+        if($this->_enablePaging && isset($_REQUEST['pagingAllowed'])) {
             $pagingAllowed = '&pagingAllowed=' . $_REQUEST['pagingAllowed'];
         }
 
         $skip = null;
-        if(isset($_REQUEST['skip']))
-        {
+        if(isset($_REQUEST['skip'])) {
             $skip = '&skip=' . $_REQUEST['skip'];
         }
 
         $keyQuery = "(";
-        foreach ($obj->getEntityKeys() as $entityKey)
-        {
+        foreach ($obj->getEntityKeys() as $entityKey) {
             $keyQuery = $keyQuery.$entityKey;
             $keyQuery = $keyQuery."=";
             $prop = new ReflectionProperty($obj, $entityKey);
             $keyVal = rtrim($prop->getValue($obj));
 
             $edmType = Utility::GetPropertyType($prop, $notNullable);
-            if(strcmp($edmType, "Edm.String") == 0)
-            {
+            if(strcmp($edmType, "Edm.String") == 0) {
                 $keyQuery = $keyQuery."'".str_replace(' ', "%20",$keyVal)."'".",";
-            }
-            else
-            {
+            } else {
                 $keyQuery = $keyQuery.str_replace(' ', "%20",$keyVal).",";
             }
         }
@@ -449,17 +394,14 @@ class WCFDataServicesEntity
      * @param string $id The entitiy key.
      * @param string $type The entity name.
      */
-    public function displayDetails($id, $type)
-    {
+    public function displayDetails($id, $type) {
         $pagingAllowed = null;
-        if($this->_enablePaging && isset($_REQUEST['pagingAllowed']))
-        {
+        if($this->_enablePaging && isset($_REQUEST['pagingAllowed'])) {
             $pagingAllowed = "<input type=\"hidden\" name=\"pagingAllowed\" value=\"".$_REQUEST['pagingAllowed']."\">";
         }
 
         $skip = null;
-        if(isset($_REQUEST['skip']))
-        {
+        if(isset($_REQUEST['skip'])) {
             $skip = "<input type=\"hidden\" name=\"skip\" value=\"".$_REQUEST['skip']."\">";
         }
 
@@ -483,24 +425,17 @@ class WCFDataServicesEntity
              ."<td>Value</td>"
              ."</tr>";
         $propertyArray = WCFDataServicesEntity::getProperties($resultSet[0]);
-        foreach ($propertyArray as $property)
-        {
+        foreach ($propertyArray as $property) {
             echo "<tr style=\"font-family: Calibri; background-color: #CCFFFF\">";
             $prop = new ReflectionProperty($resultSet[0], $property);
             if (Utility::ContainAttribute($prop->getDocComment(),
-                                         'NavigationProperty'))
-            {
-            }
-            else
-            {
+                                         'NavigationProperty')) {
+            } else {
                 $value = $prop->getValue($resultSet[0]);
                 if (Utility::ContainAttribute($prop->getDocComment(),
-                                             'NotNullable'))
-                {
+                                             'NotNullable')) {
                     echo "<td style=\"width=150pt\">" . $property . "*</td>";
-                }
-                else
-                {
+                } else {
                     echo "<td style=\"width=150pt\">" . $property . "</td>";
                 }
                 echo "<td><input size = \"150\" name=\""
@@ -529,8 +464,7 @@ class WCFDataServicesEntity
      * @param array $fields The array holding form datas.
      * @param string $type The entity name
      */
-    public function Update($fields, $type)
-    {
+    public function Update($fields, $type) {
         $object = $this->getObject($type, $fields);
         $this->_proxyObject->UpdateObject($object);
         $this->_proxyObject->SaveChanges();
@@ -541,8 +475,7 @@ class WCFDataServicesEntity
      * @param array $fields The array holding form datas.
      * @param string $type The entity name
      */
-    public function Delete($fields, $type)
-    {
+    public function Delete($fields, $type) {
         $object = $this->getObject($type, $fields);
         $this->_proxyObject->DeleteObject($object);
         $this->_proxyObject->SaveChanges();
@@ -556,33 +489,27 @@ class WCFDataServicesEntity
      * @return $object New entity instance of tyoe $type
      * which will be initialized with form data.
      */
-    protected function getObject($type, $fields = array())
-    {
+    protected function getObject($type, $fields = array()) {
         $object;
-        if(isset($fields["editLink"]))
-        {
+        if(isset($fields["editLink"])) {
             $editLink = str_replace("\'", "'", $fields["editLink"]);
             $query = $type . $editLink;
             $response = $this->_proxyObject->Execute($query);
             $source = $response->Result;
             $object = $source[0];
             unset($fields["editLink"]);
-        }
-        else
-        {
+        } else {
             $class = new ReflectionClass($type);
             $object = $class->newInstance($this->_uri);
         }
 
-        foreach ($fields as $key=>$value)
-        {
+        foreach ($fields as $key=>$value) {
             if ($key != 'btnUpdate'
                 && $key != 'btnDelete'
                 && $key != 'btnSave'
                 && $key != 'btnAddLink'
                 && $key != 'pagingAllowed'
-                && $key != 'skip')
-            {
+                && $key != 'skip') {
                 $prop = new ReflectionProperty($object, $key);
                 $prop->setValue($object, $value);
             }
@@ -594,17 +521,14 @@ class WCFDataServicesEntity
      * Function to form to add new entity instance.
      * @param string $type The entitiy name.
      */
-    public function displayAdd($type)
-    {
+    public function displayAdd($type) {
         $pagingAllowed = null;
-        if($this->_enablePaging && isset($_REQUEST['pagingAllowed']))
-        {
+        if($this->_enablePaging && isset($_REQUEST['pagingAllowed'])) {
             $pagingAllowed = "<input type=\"hidden\" name=\"pagingAllowed\" value=\"".$_REQUEST['pagingAllowed']."\">";
         }
 
         $skip = null;
-        if(isset($_REQUEST['skip']))
-        {
+        if(isset($_REQUEST['skip'])) {
             $skip = "<input type=\"hidden\" name=\"skip\" value=\"".$_REQUEST['skip']."\">";
         }
 
@@ -625,24 +549,17 @@ class WCFDataServicesEntity
              ."<td>Field</td><td>Value</td></tr>";
 
         $propertyArray = WCFDataServicesEntity::getProperties($object);
-        foreach ($propertyArray as $property)
-        {
+        foreach ($propertyArray as $property) {
             echo "<tr style=\"font-family: Calibri; "
                  . "background-color: #CCFFFF\">";
             $prop = new ReflectionProperty($object, $property);
             if (Utility::ContainAttribute($prop->getDocComment(),
-                                         'NavigationProperty'))
-            {
-            }
-            else
-            {
+                                         'NavigationProperty')) {
+            } else {
                 if (Utility::ContainAttribute($prop->getDocComment(),
-                                             'NotNullable'))
-                {
+                                             'NotNullable')) {
                     echo "<td style=\"width=150pt\">" . $property . "*</td>";
-                }
-                else
-                {
+                } else {
                     echo "<td style=\"width=150pt\">" . $property . "</td>";
                 }
                 echo "<td ><input size = \"150\" name=\""
@@ -668,24 +585,20 @@ class WCFDataServicesEntity
      * @param string $type The entitiy name.
      * @param string $attachedTo The navigation path
      */
-    public function displayAddLink($type, $attachedTo ='')
-    {
+    public function displayAddLink($type, $attachedTo ='') {
         $pagingAllowed = null;
-        if($this->_enablePaging && isset($_REQUEST['pagingAllowed']))
-        {
+        if($this->_enablePaging && isset($_REQUEST['pagingAllowed'])) {
             $pagingAllowed = "<input type=\"hidden\" name=\"pagingAllowed\" value=\"".$_REQUEST['pagingAllowed']."\">";
         }
 
         $skip = null;
-        if(isset($_REQUEST['skip']))
-        {
+        if(isset($_REQUEST['skip'])) {
             $skip = "<input type=\"hidden\" name=\"skip\" value=\"".$_REQUEST['skip']."\">";
         }
 
         echo $attachedTo."<br>";
         $pos = Utility::reverseFind($attachedTo, '/');
-        if ($pos != FALSE)
-        {
+        if ($pos != FALSE) {
             $attachedTo = substr($attachedTo, 0, $pos);
         }
         $object = $this->getObject($type);
@@ -709,8 +622,7 @@ class WCFDataServicesEntity
              ."background-color: #99CCFF\">"
              ."<td>Field</td>"
              ."<td>Value</td></tr>";
-        foreach ($object->getEntityKeys() as $key)
-        {
+        foreach ($object->getEntityKeys() as $key) {
             echo "<tr style=\"font-family: Calibri; "
                  . "background-color: #CCFFFF\">";
             echo "<td style=\"width=175pt\">"
@@ -734,8 +646,7 @@ class WCFDataServicesEntity
      * @param array $fields The array holding form datas.
      * @param string $type The entity name
      */
-    public function Insert($fields, $type)
-    {
+    public function Insert($fields, $type) {
         $object = $this->getObject($type, $fields);
         $this->_proxyObject->AddObject($type, $object);
         $this->_proxyObject->SaveChanges();
@@ -747,28 +658,22 @@ class WCFDataServicesEntity
      * @param string $type The entity name of target Object.
      * @param string $attachTo The query to get source Object.
      */
-    public function AddLink($fields, $type, $attachTo)
-    {
+    public function AddLink($fields, $type, $attachTo) {
         $keyQuery = $type. "(";
-        foreach ($fields as $key=>$value)
-        {
+        foreach ($fields as $key=>$value) {
             if ($key != 'btnUpdate'
                 && $key != 'btnDelete'
                 && $key != 'btnSave'
                 && $key != 'btnAddLink'
                 && $key != 'skip'
                 && $key != 'pagingAllowed'
-                )
-            {
+                ) {
                 $keyQuery = $keyQuery . $key . "=";
-                if (is_numeric($value))
-                {
+                if (is_numeric($value)) {
                     $keyQuery = $keyQuery
                           . str_replace(' ', "%20", $value)
                           . ",";
-                }
-                else
-                {
+                } else {
                     $keyQuery = $keyQuery
                           . "'"
                           . str_replace(' ', "%20", $value)
@@ -786,4 +691,4 @@ class WCFDataServicesEntity
         $this->_proxyObject->SaveChanges();
     }
 }
-?>
+

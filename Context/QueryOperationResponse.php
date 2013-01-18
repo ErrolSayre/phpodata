@@ -22,8 +22,7 @@
  * To represent the return value of ObjectContext::Execute and DataServiceQuery::Execute
  * methods.
  */
-class QueryOperationResponse
-{
+class QueryOperationResponse {
     protected $_headers;
     protected $_innerException;
     protected $_statusCode;
@@ -48,8 +47,7 @@ class QueryOperationResponse
     public function QueryOperationResponse($headers,
                                            $innerException,
                                            $statusCode,
-                                           $query)
-    {
+                                           $query) {
 	$this->_headers = $headers;
         $this->_innerException = $innerException;
         $this->_statusCode = $statusCode;
@@ -61,8 +59,7 @@ class QueryOperationResponse
      *
      * @return string
      */
-    public function getError()
-    {
+    public function getError() {
         return $this->_innerException;
     }
 
@@ -71,8 +68,7 @@ class QueryOperationResponse
      *
      * @return array
      */
-    public function getHeaders()
-    {
+    public function getHeaders() {
 	return $this->_headers;
     }
 
@@ -81,8 +77,7 @@ class QueryOperationResponse
      *
      * @return int
      */
-    public function getStatusCode()
-    {
+    public function getStatusCode() {
         return $this->_statusCode;
     }
 
@@ -91,8 +86,7 @@ class QueryOperationResponse
      *
      * @return Uri
      */
-    public function getQuery()
-    {
+    public function getQuery() {
         return $this->_query;
     }
 
@@ -102,10 +96,8 @@ class QueryOperationResponse
      * @return int
      * @throws ODataServiceException
      */
-    public function TotalCount()
-    {
-        if($this->CountValue == -1)
-        {
+    public function TotalCount() {
+        if($this->CountValue == -1) {
             throw new ODataServiceException(Resource::CountNotPresent,
                                            '',
                                            array(),
@@ -120,33 +112,27 @@ class QueryOperationResponse
      * @param EntitySetCollection $collection
      * @return DataServiceQueryContinuation
      */
-    public function GetContinuation($collection = null)
-    {
-        if($collection == null)
-        {
-            if($this->ObjectIDToNextLinkUrl[0] == null)
-            {
+    public function GetContinuation($collection = null) {
+        if($collection == null) {
+            if($this->ObjectIDToNextLinkUrl[0] == null) {
                 return null;
             }
             return new DataServiceQueryContinuation($this->ObjectIDToNextLinkUrl[0]);
         }
 
-        if(!isset($collection[0]))
-        {
+        if(!isset($collection[0])) {
             return null;
         }
 
         $key = $collection[0]->getObjectID();
-        if(!array_key_exists($key, $this->ObjectIDToNextLinkUrl))
-        {
+        if(!array_key_exists($key, $this->ObjectIDToNextLinkUrl)) {
             $queryOperationResponse = new QueryOperationResponse(array(),
                                                              Resource::CollectionNotBelongsToQueryResponse,
                                                              '','');
             throw new DataServiceRequestException($queryOperationResponse);
         }
 
-        if($this->ObjectIDToNextLinkUrl[$key] == null)
-        {
+        if($this->ObjectIDToNextLinkUrl[$key] == null) {
             return null;
         }
 

@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class DataServiceResponse
-{
+class DataServiceResponse {
     protected $_batchResponse;
     protected $_headers;
     protected $_operationResponses;
@@ -33,8 +32,7 @@ class DataServiceResponse
      * @param OperationResponse[] $responses
      * @param boolean $batchResponse
      */
-    public function DataServiceResponse($headers, $statusCode, $responses, $batchResponse)
-    {
+    public function DataServiceResponse($headers, $statusCode, $responses, $batchResponse) {
         $this->_headers = $headers;
         $this->_statusCode = $statusCode;
         $this->_operationResponses = $responses;
@@ -46,8 +44,7 @@ class DataServiceResponse
      *
      * @return array
      */
-    public function getBatchHeaders()
-    {
+    public function getBatchHeaders() {
         return $this->_headers;
     }
 
@@ -56,8 +53,7 @@ class DataServiceResponse
      *
      * @return int
      */
-    public function BatchStatusCode()
-    {
+    public function BatchStatusCode() {
         return $this->_statusCode;
     }
 
@@ -65,8 +61,7 @@ class DataServiceResponse
      *
      * @return boolean
      */
-    public function IsBatchResponse()
-    {
+    public function IsBatchResponse() {
         return $this->_batchResponse;
     }
 
@@ -74,9 +69,7 @@ class DataServiceResponse
      *
      * @return OperationResponse[]
      */
-    public function getOperationResponses()
-    {
+    public function getOperationResponses() {
         return $this->_operationResponses;
     }
 }
-?>

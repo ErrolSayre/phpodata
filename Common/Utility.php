@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class Utility
-{
+class Utility {
     protected static $ACCEPT_TYPE  = "Accept: application/json";
     protected static $CONTENT_TYPE = "Content-Type: application/json";
     protected static $REQUEST_GET  = "GET";
@@ -31,8 +30,7 @@ class Utility
      * @param string $type The value of Type property of __metadata.
      * @return string $entityName The entity Name
      */
-    public static function getEntityNameFromType($type)
-    {
+    public static function getEntityNameFromType($type) {
         // TBD: Take last occurrence of '.', but we should use type 2 name mapping
         $pos = strrpos($type, ".");
         $entityName = substr($type, $pos + 1);
@@ -47,8 +45,7 @@ class Utility
      * string returned by getProperties.
      * @return string $propertyName The Property Name.
      */
-    public static function getPropertyName($rawProperty)
-    {
+    public static function getPropertyName($rawProperty) {
         $pos = strpos($rawProperty, "$");
         $tmp  = substr($rawProperty, $pos + 1);
         $pos = strpos($tmp, " ");
@@ -63,20 +60,17 @@ class Utility
      * @param char $char The character to be serached.
      * @return index of $char in $string, -1 if not found.
      */
-    public static function reverseFind($string, $char)
-    {
+    public static function reverseFind($string, $char) {
         if (($len = strlen($string)) == 0)
             return -1;
 
         $revString = strrev($string);
-        if ($revString[0] == $char)
-        {
+        if ($revString[0] == $char) {
             return ($len - 1);
         }
 
         $index = strpos($revString, $char);
-        if ($index != FALSE)
-        {
+        if ($index != FALSE) {
             return ($len - $index - 1);
         }
 
@@ -89,14 +83,11 @@ class Utility
      * @return string $jsonStr The decoded string, which can
      * render by browser.
      */
-    public static function decodeJSONSpecialChar($jsonStr)
-    {
-        while ($pos = strpos($jsonStr, "\u"))
-        {
+    public static function decodeJSONSpecialChar($jsonStr) {
+        while ($pos = strpos($jsonStr, "\u")) {
             $hex = substr($jsonStr, $pos + 2, 4);
             $char = hexdec($hex);
-            switch ($char)
-            {
+            switch ($char) {
                 case "\"":
                     $char = "";
                     break;
@@ -123,17 +114,14 @@ class Utility
      * @param string $jsonStr The string to be encoded.
      * @return string $jsonStr The encoded json string.
      */
-    public static function encodeJSONSpecialChar($jsonStr)
-    {
-       while ($pos = strpos($jsonStr, "&#"))
-       {
+    public static function encodeJSONSpecialChar($jsonStr) {
+       while ($pos = strpos($jsonStr, "&#")) {
             $pos  = strpos($jsonStr, "&#");
             $pos2 = strpos($jsonStr, ";",$pos);
             $char = substr($jsonStr, $pos + 2, $pos2 - $pos - 2);
             $hex  = dechex($char);
             $pad  = '';
-            for ($i = strlen($hex); $i < 4; $i++)
-            {
+            for ($i = strlen($hex); $i < 4; $i++) {
                 $pad = $pad . "0";
             }
 
@@ -147,12 +135,10 @@ class Utility
         return $jsonStr;
     }
 
-    public static function getProperties($entityName, &$PropertyArray)
-    {
+    public static function getProperties($entityName, &$PropertyArray) {
         $class = new ReflectionClass($entityName);
         $properties = $class->getProperties();
-        foreach ($properties as $property)
-        {
+        foreach ($properties as $property) {
             $pos1 = strpos($property, "$");
             $tmp  = substr($property, $pos1+1);
             $pos2 = strpos($tmp, " ");
@@ -168,8 +154,7 @@ class Utility
      * to be retrived from $phpNativeJSON.
      * @return string The value of property $propertyName.
      */
-    public static function getValueFromJSONResponse($phpNativeJSON, $propertyName)
-    {
+    public static function getValueFromJSONResponse($phpNativeJSON, $propertyName) {
         return  $phpNativeJSON["d"][$propertyName];
     }
 
@@ -179,11 +164,9 @@ class Utility
      * @param string $url URL to entity instance in data service.
      * @return $object The entity instance.
      */
-    public static function getEntity($entry, $url)
-    {
+    public static function getEntity($entry, $url) {
         $class = new ReflectionClass($entry);
-        if ($class->isInstantiable())
-        {
+        if ($class->isInstantiable()) {
             $object = $class->newInstance($url);
         }
 
@@ -195,8 +178,7 @@ class Utility
      * @param string $date Date in json format.
      * @return string Date in php format.
      */
-    public static function jsonDateToPhpDate($date)
-    {
+    public static function jsonDateToPhpDate($date) {
         $pos  = strpos($date, "(");
         $date = substr($date, $pos + 1);
         $pos  = strpos($date, ")");
@@ -214,14 +196,11 @@ class Utility
      * @return TRUE if any of the entity key is empty.
      * FALSE if none of the entity key is empty.
      */
-    public static function isEntityKeyEmpty($object)
-    {
-        foreach ($object->getEntityKeys() as $entityKey)
-        {
+    public static function isEntityKeyEmpty($object) {
+        foreach ($object->getEntityKeys() as $entityKey) {
             $prop = new ReflectionProperty($object, $entityKey);
             $keyVal = $prop->getValue($object);
-            if (empty($keyVal))
-            {
+            if (empty($keyVal)) {
                 return TRUE;
             }
         }
@@ -234,25 +213,20 @@ class Utility
      * @return string $uri The uri of entity instance in data service
      * corrosponding to $object.
      */
-    public static function getUri($object)
-    {
+    public static function getUri($object) {
         $className = get_class($object);
         $keyQuery = "";
-        foreach ($object->getEntityKeys() as $entityKey)
-        {
+        foreach ($object->getEntityKeys() as $entityKey) {
             $keyQuery = $keyQuery . $entityKey;
             $keyQuery = $keyQuery . "=";
             $prop = new ReflectionProperty($object, $entityKey);
             $keyVal = $prop->getValue($object);
 
-            if (Utility::ContainAttribute($prop->getDocComment(), 'Edm.String') == FALSE)
-            {
+            if (Utility::ContainAttribute($prop->getDocComment(), 'Edm.String') == FALSE) {
                 $keyQuery = $keyQuery
                           . str_replace(' ', "%20", $keyVal)
                           . ",";
-            }
-            else
-            {
+            } else {
                 $keyQuery = $keyQuery
                           . "'"
                           . str_replace(' ', "%20", $keyVal)
@@ -273,10 +247,8 @@ class Utility
      * comment section.
      * FALSE if attribute is not present in the comment.
      */
-    public static function ContainAttribute($docComment, $attribute)
-    {
-        if (strpos($docComment, $attribute) == FALSE)
-        {
+    public static function ContainAttribute($docComment, $attribute) {
+        if (strpos($docComment, $attribute) == FALSE) {
             return FALSE;
         }
 
@@ -289,15 +261,11 @@ class Utility
      * @param $object The entity instance.
      * @return string $retVal The converted property.
      */
-    public static function edmToJSONType($prop, $object)
-    {
+    public static function edmToJSONType($prop, $object) {
         $retVal = $prop->getValue($object);
-        if (Utility::ContainAttribute($prop->getDocComment(), 'Edm.Binary'))
-        {
+        if (Utility::ContainAttribute($prop->getDocComment(), 'Edm.Binary')) {
             $retVal = base64_encode($retVal);
-        }
-        else
-        {
+        } else {
             $retVal = str_replace("'", "\'", $retVal);
         }
         return $retVal;
@@ -307,15 +275,13 @@ class Utility
      * This function will return a mapping table for
      * conversion of special characters in html to json
      */
-    function get_html_json_translation_table()
-    {
+    function get_html_json_translation_table() {
         $allEntities = Utility::get_html_translation_table_();
         $specialEntities = get_html_translation_table(HTML_SPECIALCHARS, ENT_NOQUOTES);
         $noTags = array_diff($allEntities, $specialEntities);
         $keys = array();
         $values = array();
-        foreach ($noTags as $char => $entity)
-        {
+        foreach ($noTags as $char => $entity) {
              $values[] = "\u00" . dechex(ord($char));
         }
 
@@ -328,8 +294,7 @@ class Utility
      * and also add some special character which are not in the
      * default translation table.
      */
-    function get_html_translation_table_()
-    {
+    function get_html_translation_table_() {
         $trans = get_html_translation_table(HTML_ENTITIES, ENT_NOQUOTES);
         $trans[chr(128)] = '&euro;';
         $trans[chr(130)] = '&sbquo;';    // Single Low-9 Quotation Mark
@@ -365,57 +330,37 @@ class Utility
      *@param <string> $value
      *Merge $value with $string and append a newline at the end
      */
-    public function WriteLine(&$string, $value)
-    {
-        if($value != null)
-        {
+    public function WriteLine(&$string, $value) {
+        if($value != null) {
             $string = $string . $value;
         }
         $string = $string . "\n";
     }
 
-    public function GetPropertyType($property, &$notNullable)
-    {
+    public function GetPropertyType($property, &$notNullable) {
         $type = "";
         $notNullable = false;
 
-        if (Utility::ContainAttribute($property->getDocComment(), 'EntityProperty'))
-        {
-            if(Utility::ContainAttribute($property->getDocComment(), 'NotNullable'))
-            {
+        if (Utility::ContainAttribute($property->getDocComment(), 'EntityProperty')) {
+            if(Utility::ContainAttribute($property->getDocComment(), 'NotNullable')) {
                 $notNullable = true;
             }
 
-            if(Utility::ContainAttribute($property->getDocComment(), 'Edm.String'))
-            {
+            if(Utility::ContainAttribute($property->getDocComment(), 'Edm.String')) {
                 $type = "Edm.String";
-            }
-            else if(Utility::ContainAttribute($property->getDocComment(), 'Edm.Int32'))
-            {
+            } else if(Utility::ContainAttribute($property->getDocComment(), 'Edm.Int32')) {
                 $type = "Edm.Int32";
-            }
-            else if(Utility::ContainAttribute($property->getDocComment(), 'Edm.Binary'))
-            {
+            } else if(Utility::ContainAttribute($property->getDocComment(), 'Edm.Binary')) {
                 $type = "Edm.Binary";
-            }
-            else if(Utility::ContainAttribute($property->getDocComment(), 'Edm.DateTime'))
-            {
+            } else if(Utility::ContainAttribute($property->getDocComment(), 'Edm.DateTime')) {
                 $type = "Edm.DateTime";
-            }
-            else if(Utility::ContainAttribute($property->getDocComment(), 'Edm.Decimal'))
-            {
+            } else if(Utility::ContainAttribute($property->getDocComment(), 'Edm.Decimal')) {
                 $type = "Edm.Decimal";
-            }
-            else if(Utility::ContainAttribute($property->getDocComment(), 'Edm.Int16'))
-            {
+            } else if(Utility::ContainAttribute($property->getDocComment(), 'Edm.Int16')) {
                 $type = "Edm.Int16";
-            }
-            else if(Utility::ContainAttribute($property->getDocComment(), 'Edm.Boolean'))
-            {
+            } else if(Utility::ContainAttribute($property->getDocComment(), 'Edm.Boolean')) {
                 $type = "Edm.Boolean";
-            }
-            else if(Utility::ContainAttribute($property->getDocComment(), 'Edm.Decimal'))
-            {
+            } else if(Utility::ContainAttribute($property->getDocComment(), 'Edm.Decimal')) {
                 $type = "Edm.Decimal";
             }
         }
@@ -431,11 +376,9 @@ class Utility
      *http://host/service.svc/EntitySet(KeyValue)
      *
      */
-    public static function GetEntitySetFromUrl($uri)
-    {
+    public static function GetEntitySetFromUrl($uri) {
         $openBracePos = strpos($uri, '(');
-        if( $openBracePos === FALSE)
-        {
+        if( $openBracePos === FALSE) {
             throw new ODataServiceException(Resource::ExpectedOpenBraceNotFound,
                                             '',
                                             array(),
@@ -443,18 +386,15 @@ class Utility
         }
 
         $slashPos = strpos($uri, '/');
-        if($slashPos === FALSE)
-        {
+        if($slashPos === FALSE) {
             return substr($uri, 0, $openBracePos);
         }
 
-        if($slashPos > $openBracePos)
-        {
+        if($slashPos > $openBracePos) {
             return substr($uri, 0, $openBracePos);
         }
 
-        for($i = $slashPos + 1; $i < $openBracePos; $i++)
-        {
+        for($i = $slashPos + 1; $i < $openBracePos; $i++) {
             if($uri[$i] == '/')
                 $slashPos = $i;
         }
@@ -467,30 +407,23 @@ class Utility
      * @param <ReflectionProperty or ReflectionClass> $typeInstance
      * @return <array> name-value pair of attributes
      */
-    public static function  getAttributes($typeInstance)
-    {
+    public static function  getAttributes($typeInstance) {
         $AttributeCollection = array();
         $rawAttributes = $typeInstance->getDocComment();
         $attributes = explode("\n", $rawAttributes);
-        foreach ($attributes as $attribute)
-        {
+        foreach ($attributes as $attribute) {
             $i = strpos($attribute, "@");
-            if ($i !== FALSE)
-            {
+            if ($i !== FALSE) {
                 $j = strpos($attribute, ":");
                 $key = substr($attribute, $i + 1, $j - $i - 1);
                 $value = trim(substr($attribute, $j+1));
                 $key = trim($key);
-                if (isset($AttributeCollection[$key]))
-                {
-                    if (! is_array($AttributeCollection[$key]))
-                    {
+                if (isset($AttributeCollection[$key])) {
+                    if (! is_array($AttributeCollection[$key])) {
                         $AttributeCollection[$key] = array($AttributeCollection[$key]);
                     }
                     $AttributeCollection[$key][] = $value;
-                }
-                else
-                {
+                } else {
                     $AttributeCollection[$key] = $value;
                 }
             }
@@ -499,40 +432,32 @@ class Utility
         return $AttributeCollection;
     }
 
-    public static function IsAbsoluteUrl($url)
-    {
+    public static function IsAbsoluteUrl($url) {
         $parts = parse_url($url);
-        if(isset($parts['scheme']) && isset($parts['host']))
-        {
+        if(isset($parts['scheme']) && isset($parts['host'])) {
             return true;
         }
         return false;
     }
 
-    public static function CreateUri($baseUri, $requestUri)
-    {
-        if(!isset($requestUri) || $requestUri == '')
-        {
+    public static function CreateUri($baseUri, $requestUri) {
+        if(!isset($requestUri) || $requestUri == '') {
             throw new Exception('Utility::CreateUri The requestUri argument cannot be null');
         }
-        if(Utility::IsAbsoluteUrl($requestUri))
-        {
+        if(Utility::IsAbsoluteUrl($requestUri)) {
             return $requestUri;
         }
 
         return( rtrim($baseUri, "/") . "/" . ltrim($requestUri, "/"));
     }
 
-    public static function TimeInISO8601()
-    {
+    public static function TimeInISO8601() {
         $time = time();
         return date('Y-m-d', $time) . 'T' . gmdate("H:i:s", $time) .'Z';
     }
 
-    public static function HttpSuccessCode($httpCode)
-    {
-        if(!empty($httpCode))
-        {
+    public static function HttpSuccessCode($httpCode) {
+        if(!empty($httpCode)) {
             $restype = floor($httpCode / 100);
             return ($restype == 2 || $restype == 1);
         }
@@ -540,4 +465,3 @@ class Utility
         throw new Exception('Utility::HttpSuccessCode The httpCode argument cannot be null');
     }
 }
-?>

@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class InternalError extends Exception
-{
+class InternalError extends Exception {
     /**
      *
      * @var string
@@ -33,8 +32,7 @@ class InternalError extends Exception
      * @param string $error
      * @param string $detailedError
      */
-    public function InternalError($error)
-    {
+    public function InternalError($error) {
         $this->_error = $error;
         $this->_detailedError = $detailedError;
     }
@@ -44,9 +42,8 @@ class InternalError extends Exception
      *
      * @return string
      */
-    public function getError()
-    {
+    public function getError() {
         return $this->_error;
     }
 }
-?>
+

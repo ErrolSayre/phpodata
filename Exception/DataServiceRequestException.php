@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class DataServiceRequestException extends Exception
-{
+class DataServiceRequestException extends Exception {
     /**
      *
      * @var QueryOperationResponse
@@ -32,9 +31,7 @@ class DataServiceRequestException extends Exception
      *
      * @param QueryOperationResponse $response
      */
-    public function DataServiceRequestException($response)
-    {
+    public function DataServiceRequestException($response) {
 	$this->Response = $response;
     }
 }
-?>

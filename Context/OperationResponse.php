@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class OperationResponse
-{
+class OperationResponse {
     /**
      * To hold the HttpHeaders of the HttpResponse object containing query result.
      *
@@ -50,8 +49,7 @@ class OperationResponse
      * @param string $error
      * @param int $statusCode
      */
-    public function OperationResponse($headers, $error, $statusCode)
-    {
+    public function OperationResponse($headers, $error, $statusCode) {
         $this->_headers = $headers;
         $this->_innerException = $error;
         $this->_statusCode = $statusCode;
@@ -62,8 +60,7 @@ class OperationResponse
      *
      * @return string
      */
-    public function getError()
-    {
+    public function getError() {
         return $this->_headers;
     }
 
@@ -72,8 +69,7 @@ class OperationResponse
      *
      * @return array
      */
-    public function getHeaders()
-    {
+    public function getHeaders() {
         return $this->_innerException;
     }
 
@@ -82,9 +78,7 @@ class OperationResponse
      *
      * @return int
      */
-    public function getStatusCode()
-    {
+    public function getStatusCode() {
        return $this->_statusCode;
     }
 }
-?>

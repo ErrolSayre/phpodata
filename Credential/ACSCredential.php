@@ -26,8 +26,7 @@ require_once dirname(dirname(__FILE__)).'/Credential/CredentialBase.php';
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class ACSCredential extends CredentialBase
-{
+class ACSCredential extends CredentialBase {
     /**
      * @var ACSUtil
      *
@@ -42,8 +41,7 @@ class ACSCredential extends CredentialBase
      */
     public function ACSCredential($service_namespace, $wrap_name,
                             $wrap_password, $wrap_scope,
-                            $claims = array(), $proxy = null)
-    {
+                            $claims = array(), $proxy = null) {
         $this->_acsUtil = new ACSUtil($service_namespace, $wrap_name,
                                       $wrap_password, $wrap_scope,
                                       $claims, $proxy);
@@ -53,10 +51,8 @@ class ACSCredential extends CredentialBase
      *
      * @param <HttpProxy> $proxy
      */
-    public function SetProxy($proxy)
-    {
-        if(!$this->_acsUtil->HasProxy())
-        {
+    public function SetProxy($proxy) {
+        if(!$this->_acsUtil->HasProxy()) {
             $this->_acsUtil->SetProxy($proxy);
         }
     }
@@ -66,14 +62,11 @@ class ACSCredential extends CredentialBase
      * @param <uri> $requestUrl
      * @return <array>
      */
-    public function GetSingedHeaders($requestUrl)
-    {
-        try
-        {
+    public function GetSingedHeaders($requestUrl) {
+        try {
             return $this->_acsUtil->GetSingedHeaders();
         }
-        catch(ACSUtilException $exception)
-        {
+        catch(ACSUtilException $exception) {
             //re-throw the exception, client should handle this.
             throw $exception;
         }
@@ -84,9 +77,8 @@ class ACSCredential extends CredentialBase
      *
      * @return <CredentailType::*>
      */
-    public function getCredentialType()
-    {
+    public function getCredentialType() {
         return CredentialType::ACS;
     }
 };
-?>
+

@@ -66,23 +66,19 @@
    /**
     * Container class <xsl:value-of select="@Name"/>, Namespace: <xsl:value-of select="$service_namespace"/>
     */
-    class <xsl:value-of select="@Name"/> extends ObjectContext
-    {
+    class <xsl:value-of select="@Name"/> extends ObjectContext {
     <xsl:for-each select="schema_1_0:EntitySet | schema_1_1:EntitySet | schema_1_2:EntitySet">
         protected $_<xsl:value-of select="@Name"/>;</xsl:for-each>
         
        /**
         * The constructor for <xsl:value-of select="@Name"/> accepting service URI
         */
-        public function __construct($uri = "")
-        {
-            if(strlen($uri) == 0)
-            {
+        public function __construct($uri = "") {
+            if(strlen($uri) == 0) {
                 $uri = DEFAULT_ODATA_SERVICE_URL;
             }
 
-            if (Utility::reverseFind($uri, '/') != strlen($uri) - 1)
-            {
+            if (Utility::reverseFind($uri, '/') != strlen($uri) - 1) {
                 $uri = $uri . '/';
             }
 
@@ -115,8 +111,7 @@
          * the entityset <xsl:value-of select="@Name"/>
          * @return DataServiceQuery
          */
-        public function <xsl:value-of select="@Name"/>()
-        {
+        public function <xsl:value-of select="@Name"/>() {
             $this->_<xsl:value-of select="@Name"/>->ClearAllOptions();
             return $this->_<xsl:value-of select="@Name"/>;
         }
@@ -129,8 +124,7 @@
         * Add <xsl:value-of select="@Name"/>
         * @param <xsl:value-of select="@Name"/> $object
         */
-      public function AddTo<xsl:value-of select="@Name"/>($object)
-        {
+      public function AddTo<xsl:value-of select="@Name"/>($object) {
             return parent::AddObject('<xsl:value-of select="@Name"/>', $object);
         }
     </xsl:for-each>
@@ -138,8 +132,7 @@
        /**
         * This function returns the entities.
         */
-        public function getEntities()
-        {
+        public function getEntities() {
             return $this->_entities;
         }
     }
@@ -162,8 +155,7 @@
       * @FC_KeepInContent:<xsl:value-of select="@m:FC_KeepInContent"/>
     </xsl:if>
     */
-    class <xsl:value-of select="@Name"/> extends Object
-    {
+    class <xsl:value-of select="@Name"/> extends Object {
         protected $_entityMap = array();
         protected $_entityKey = array();
         protected $_relLinks  = array();
@@ -205,8 +197,7 @@
         */
         public static function Create<xsl:value-of select="@Name"/>(<xsl:for-each select="schema_1_0:Property[@Nullable = 'false'] | schema_1_1:Property[@Nullable = 'false'] | schema_1_2:Property[@Nullable = 'false']">
             $<xsl:value-of select="@Name"/><xsl:if test="position() != last()">, </xsl:if>
-    </xsl:for-each>)
-        {   <xsl:variable name="ClassName" select="@Name"/>
+    </xsl:for-each>) {   <xsl:variable name="ClassName" select="@Name"/>
             $<xsl:value-of select="@Name"/> = new <xsl:value-of select="@Name"/>();<xsl:for-each select="schema_1_0:Property[@Nullable = 'false'] | schema_1_1:Property[@Nullable = 'false'] | schema_1_2:Property[@Nullable = 'false']">
             $<xsl:value-of select="$ClassName"/>-><xsl:value-of select="@Name"/> = $<xsl:value-of select="@Name"/>;</xsl:for-each>
             return $<xsl:value-of select="@Name"/>;
@@ -215,8 +206,7 @@
        /**
         * Constructor for <xsl:value-of select="@Name"/>
         */
-        public function __construct($uri = "")
-        {
+        public function __construct($uri = "") {
             $this->_objectID = Guid::NewGuid();
             $this->_baseURI = $uri;
     <xsl:for-each select="schema_1_0:NavigationProperty | schema_1_1:NavigationProperty | schema_1_2:NavigationProperty">
@@ -229,50 +219,43 @@
        /**
         * overring getObjectID() functon of Object class
         */
-        public function getObjectID()
-        {
+        public function getObjectID() {
             return $this->_objectID;
         }
 
        /**
         * This function returns the entity keys of this entity.
         */
-        public function getEntityKeys()
-        {
+        public function getEntityKeys() {
             return $this->_entityKey;
         }
 
        /**
         * This function set the entity keys of this entity.
         */
-        public function setEntityKeys($entityKey)
-        {
+        public function setEntityKeys($entityKey) {
             $this->_entityKey = $entityKey;
         }
 
        /**
         * This function returns the related links of this entity.
         */
-        public function getRelatedLinks()
-        {
+        public function getRelatedLinks() {
             return $this->_relLinks;
         }
 
        /**
         * This function set the related links of this entity.
         */
-        public function setRelatedLinks($relLinks)
-        {
+        public function setRelatedLinks($relLinks) {
             $this->_relLinks = $relLinks;
         }
 
        /**
         * Function for getting Entity Type Name corrosponding to navigation Name
         */
-        public function getActualEntityTypeName($key)
-        {
-            if (array_key_exists($key, $this->_entityMap))
-            {
+        public function getActualEntityTypeName($key) {
+            if (array_key_exists($key, $this->_entityMap)) {
                 return ($this->_entityMap[$key]);
             }
             return $key;
@@ -287,8 +270,7 @@
     * @class:<xsl:value-of select="@Name"/>
     * @type:ComplexType
     */
-    class <xsl:value-of select="@Name"/>
-    {
+    class <xsl:value-of select="@Name"/> {
     <xsl:for-each select="schema_1_0:Property | schema_1_1:Property | schema_1_2:Property">
        /**
         * @Type:EntityProperty<xsl:if test="@Nullable = 'false'">

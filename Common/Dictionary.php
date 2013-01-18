@@ -23,8 +23,7 @@
  * requires object to be derived from Object class. Which cause
  * object to have unique ObjectID.
  */
-class Dictionary
-{
+class Dictionary {
     /**
      * Array to hold the dictionary entries as Key-Value Pair
      *
@@ -40,11 +39,9 @@ class Dictionary
      * @param <object> $value The value object
      * @throws Exception
      */
-    public function Add($key, $value)
-    {
+    public function Add($key, $value) {
         $objectID = $key->getObjectID();
-        if(array_key_exists($objectID, $this->_entries))
-        {
+        if(array_key_exists($objectID, $this->_entries)) {
             throw new Exception("Key already exists");
         }
 
@@ -58,11 +55,9 @@ class Dictionary
      * @returns <bool> TRUE: if $key exists, FALSE: if $key not exists
      *
      */
-    public function Remove($key)
-    {
+    public function Remove($key) {
         $objectID = $key->getObjectID();
-        if(array_key_exists($objectID, $this->_entries))
-        {
+        if(array_key_exists($objectID, $this->_entries)) {
             unset($this->_entries[$objectID]);
             return TRUE;
         }
@@ -74,10 +69,8 @@ class Dictionary
      * To remove all entries from dictionary.
      *
      */
-    public function RemoveAll()
-    {
-        foreach($this->_entries as $key => $value)
-        {
+    public function RemoveAll() {
+        foreach($this->_entries as $key => $value) {
             unset($this->_entries[$key]);
         }
     }
@@ -87,11 +80,9 @@ class Dictionary
      *
      * @param <object> $key
      */
-    public function ContainsKey($key)
-    {
+    public function ContainsKey($key) {
         $objectID = $key->getObjectID();
-        if(array_key_exists($objectID, $this->_entries))
-        {
+        if(array_key_exists($objectID, $this->_entries)) {
             return TRUE;
         }
 
@@ -103,11 +94,9 @@ class Dictionary
      *
      * @Returns <Object list>
      */
-    public function Values()
-    {
+    public function Values() {
         $values = array();
-        foreach($this->_entries as $key => $value)
-        {
+        foreach($this->_entries as $key => $value) {
             $values[] = $value->entry2;
         }
 
@@ -119,11 +108,9 @@ class Dictionary
      *
      * @Returns <Object list>
      */
-    public function Keys()
-    {
+    public function Keys() {
         $keys = array();
-        foreach($this->_entries as $key => $value)
-        {
+        foreach($this->_entries as $key => $value) {
             $keys[] = $value->entry1;
         }
 
@@ -135,8 +122,7 @@ class Dictionary
      *
      * @Return<int>
      */
-    public function Count()
-    {
+    public function Count() {
         return count($this->_entries);
     }
 
@@ -148,11 +134,9 @@ class Dictionary
      * corrosponding to key on return
      * @Returns <bool> TRUE if $key exists, FALSE if $key not exists
      */
-    public function TryGetValue($key, &$value)
-    {
+    public function TryGetValue($key, &$value) {
         $objectID = $key->getObjectID();
-        if(array_key_exists($objectID, $this->_entries))
-        {
+        if(array_key_exists($objectID, $this->_entries)) {
             $value = $this->_entries[$objectID]->entry2;
             return TRUE;
         }
@@ -167,19 +151,16 @@ class Dictionary
      * @param <string> $propertyName The name of property used for sorting
      * @Returns No return value
      */
-    public function Sort($propertyName)
-    {
+    public function Sort($propertyName) {
         $sortArray = array();
-        foreach($this->_entries as $key => $value)
-        {
+        foreach($this->_entries as $key => $value) {
             $property = new ReflectionProperty($value->entry2, $propertyName);
             $sortArray[$key] = $property->getValue($value->entry2);
         }
 
         asort($sortArray);
         $newEntries = array();
-        foreach($sortArray as $key => $value)
-        {
+        foreach($sortArray as $key => $value) {
             $newEntries[$key] = $this->_entries[$key];
         }
 
@@ -193,15 +174,12 @@ class Dictionary
      * @param <object> $key The key whose index to be returned
      * Returns <integer> index: if $key exists, -1: if $key not exists
      */
-    public function FindEntry($key)
-    {
+    public function FindEntry($key) {
         $index = -1;
         $objectID = $key->getObjectID();
-        foreach($this->_entries as $key => $value)
-        {
+        foreach($this->_entries as $key => $value) {
             $index++;
-            if($key == $objectID)
-            {
+            if($key == $objectID) {
                 return $index;
             }
         }
@@ -216,18 +194,14 @@ class Dictionary
      * @Returns <object> if index is with in the range.
      * @throws Exception
      */
-    public function GetAt($index)
-    {
-        if($index < 0 || $index >= count($this->_entries))
-        {
+    public function GetAt($index) {
+        if($index < 0 || $index >= count($this->_entries)) {
             throw new Exception("index out of boundary");
         }
 
         $i = 0;
-        foreach($this->_entries as $key => $value)
-        {
-            if($i == $index)
-            {
+        foreach($this->_entries as $key => $value) {
+            if($i == $index) {
                 return $value->entry2;
             }
 
@@ -249,25 +223,20 @@ class Dictionary
      */
     public static function Merge($dictionary1, $dictionary2,
                                  $propertyName = null, $propertyValue = null,
-                                 $condition = TRUE)
-    {
+                                 $condition = TRUE) {
         $mergedDictionary = new Dictionary();
-        foreach($dictionary1->_entries as $key => $value)
-        {
+        foreach($dictionary1->_entries as $key => $value) {
             if(($propertyName != null) &&
-               (!Dictionary::canAdd($value->entry2, $propertyName, $propertyValue, $condition)))
-            {
+               (!Dictionary::canAdd($value->entry2, $propertyName, $propertyValue, $condition))) {
                 continue;
             }
 
             $mergedDictionary->Add($value->entry1, $value->entry2);
         }
 
-        foreach($dictionary2->_entries as $key => $value)
-        {
+        foreach($dictionary2->_entries as $key => $value) {
             if(($propertyName != null) &&
-               (!Dictionary::canAdd($value->entry2, $propertyName, $propertyValue, $condition)))
-            {
+               (!Dictionary::canAdd($value->entry2, $propertyName, $propertyValue, $condition))) {
                 continue;
             }
 
@@ -285,14 +254,12 @@ class Dictionary
      * @param <anyType> $propertyValue
      * @patam <bool> $condition
      */
-    protected static function canAdd($value, $propertyName, $propertyValue, $condition)
-    {
+    protected static function canAdd($value, $propertyName, $propertyValue, $condition) {
         $property = new ReflectionProperty($value, $propertyName);
         if((($condition == TRUE) &&
            ($property->getValue($value) != $propertyValue)) ||
            (($condition == FALSE) &&
-           ($property->getValue($value) == $propertyValue)))
-           {
+           ($property->getValue($value) == $propertyValue))) {
             return FALSE;
            }
 
@@ -305,8 +272,7 @@ class Dictionary
   * internal array.
   *
   */
-class Pair
-{
+class Pair {
     /**
      *
      * @var <Object>
@@ -325,10 +291,8 @@ class Pair
      * @param <Object> $entry1
      * @param <Object> $entry2
      */
-    public function Pair($entry1, $entry2)
-    {
+    public function Pair($entry1, $entry2) {
         $this->entry1 = $entry1;
         $this->entry2 = $entry2;
     }
 }
-?>

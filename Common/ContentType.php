@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class ContentType
-{
+class ContentType {
     /**
      * HTML Document
      */
@@ -111,4 +110,3 @@ class ContentType
      */
     const ZIP = 'application/x-zip-compressed';
 }
-?>

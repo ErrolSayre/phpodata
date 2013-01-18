@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class DataServiceSaveStream
-{
+class DataServiceSaveStream {
     /**
      *
      * @var Stream
@@ -39,8 +38,7 @@ class DataServiceSaveStream
      * @param Stream $stream
      * @param DataServiceRequestArgs $args
      */
-    public function DataServiceSaveStream($stream, $args)
-    {
+    public function DataServiceSaveStream($stream, $args) {
         $this->_stream = $stream;
         $this->_args = $args;
     }
@@ -50,8 +48,7 @@ class DataServiceSaveStream
      *
      * @return Stream
      */
-    public function getStream()
-    {
+    public function getStream() {
         return $this->_stream;
     }
 
@@ -62,9 +59,7 @@ class DataServiceSaveStream
      *
      * @return DataServiceRequestArgs
      */
-    public function getArgs()
-    {
+    public function getArgs() {
         return $this->_args;
     }
 }
-?>

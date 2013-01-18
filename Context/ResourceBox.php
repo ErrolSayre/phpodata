@@ -22,8 +22,7 @@
  * To represent class whose instance holds entity instance and its related
  * information in the context.
  */
-class ResourceBox extends Entity
-{
+class ResourceBox extends Entity {
 
    /**
     * This variable will hold the uri to the resource if resource is existing
@@ -107,8 +106,7 @@ class ResourceBox extends Entity
      * @Returns Object
      * Get method for the entity instance
      */
-    public function getResource()
-    {
+    public function getResource() {
         return $this->_resource;
     }
 
@@ -118,8 +116,7 @@ class ResourceBox extends Entity
      *@param string $editLink
      *@param Object $resource
      */
-    public function ResourceBox($identity, $editLink, $resource)
-    {
+    public function ResourceBox($identity, $editLink, $resource) {
         $this->Identity = $identity;
         $this->EditLink = $editLink;
         $this->_resource = $resource;
@@ -134,8 +131,7 @@ class ResourceBox extends Entity
     /**
      * @Returns TRUE always.
      */
-    public function IsResource()
-    {
+    public function IsResource() {
         return TRUE;
     }
 
@@ -147,8 +143,7 @@ class ResourceBox extends Entity
      *@param Uri $baseUriWithSlash
      *@Returns Uri
      */
-    public function GetResourceUri($baseUriWithSlash)
-    {
+    public function GetResourceUri($baseUriWithSlash) {
         return $baseUriWithSlash . $this->EditLink;
     }
 
@@ -159,10 +154,8 @@ class ResourceBox extends Entity
      *@param RelatedEnd $related
      *@Return bool
      */
-    public function IsRelatedEntity($related)
-    {
-        if ($this->_resource->getObjectID() == $related->GetSourceResource()->getObjectID())
-        {
+    public function IsRelatedEntity($related) {
+        if ($this->_resource->getObjectID() == $related->GetSourceResource()->getObjectID()) {
             return TRUE;
         }
 
@@ -175,10 +168,8 @@ class ResourceBox extends Entity
      * @param Uri $baseUriWithSlash The service uri
      * @return Uri The media resource uri if it exists
      */
-    public function GetMediaResourceUri($baseUriWithSlash)
-    {
-        if($this->StreamLink != null)
-        {
+    public function GetMediaResourceUri($baseUriWithSlash) {
+        if($this->StreamLink != null) {
             //Seems the StreamLink value ie value of href attribute of Content
             //node is absolute, if its relative we should append the
             //baseurl (after removing .svc part) with StreamLink
@@ -194,14 +185,11 @@ class ResourceBox extends Entity
      * @param Uri $baseUriWithSlash
      * @return Uri
      */
-    public function GetEditMediaResourceUri($baseUriWithSlash)
-    {
-        if($this->EditMediaLink != null)
-        {
+    public function GetEditMediaResourceUri($baseUriWithSlash) {
+        if($this->EditMediaLink != null) {
             return Utility::CreateUri($baseUriWithSlash, $this->EditMediaLink);
         }
 
         return null;
     }
 }
-?>

@@ -21,8 +21,7 @@
  *
  * defines constants which is used to represents state of entity instances.
  */
-class EntityStates
-{
+class EntityStates {
     /**
      * Used to indicate a new entity has been added (using AddObject) or a new link
      * has been created (using AddLink).
@@ -57,4 +56,4 @@ class EntityStates
      */
     const Unchanged = '5';
 }
-?>
+

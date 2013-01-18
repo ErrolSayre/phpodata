@@ -19,12 +19,10 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class HttpVerb
-{
+class HttpVerb {
     const DELETE = 'DELETE';
     const GET = 'GET';
     const POST = 'POST';
     const PUT = 'PUT';
     const MERGE = 'MERGE';
 }
-?>

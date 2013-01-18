@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class HttpRequest
-{
+class HttpRequest {
     /**
      * curl reference.
      *
@@ -102,8 +101,7 @@ class HttpRequest
      */
     public function HttpRequest($httpMethod, $url, $credential, $proxy,
                                 $headers = array(), $postBody = null,
-                                $credentialsInHeader = false)
-    {
+                                $credentialsInHeader = false) {
         $this->_httpMethod = $httpMethod;
         $this->_url = $url;
         $this->_credential = $credential;
@@ -113,8 +111,7 @@ class HttpRequest
         $this->_requestBody = null;
         $this->_putFileHandle = null;
 
-        if (!is_null($postBody))
-        {
+        if (!is_null($postBody)) {
             $this->_isPostBody = true;
             $this->_requestBody = $postBody;
         }
@@ -135,8 +132,7 @@ class HttpRequest
      * To get the request body as html friendly.
      * @return string
      */
-    public function getHTMLFriendlyBody()
-    {
+    public function getHTMLFriendlyBody() {
         return nl2br(htmlspecialchars($this->_requestBody));
     }
 
@@ -145,8 +141,7 @@ class HttpRequest
      *
      * @return string
      */
-    public function getBody()
-    {
+    public function getBody() {
         return $this->_requestBody;
     }
 
@@ -155,8 +150,7 @@ class HttpRequest
      *
      * @param string $postBody
      */
-    public function setPostBody($postBody)
-    {
+    public function setPostBody($postBody) {
         $this->_requestBody = $postBody;
         $this->_isPostBody = true;
     }
@@ -166,8 +160,7 @@ class HttpRequest
      *
      * @param string $putBody
      */
-    public function setPutBody($putBody)
-    {
+    public function setPutBody($putBody) {
         $this->_requestBody = $putBody;
         $this->_isPostBody = false;
     }
@@ -177,8 +170,7 @@ class HttpRequest
      *
      * @return HttpVerb
      */
-    public function getMethod()
-    {
+    public function getMethod() {
         return $this->_httpMethod;
     }
 
@@ -187,8 +179,7 @@ class HttpRequest
      *
      * @param HttpVerb $httpVerb
      */
-    public function setMethod($httpVerb)
-    {
+    public function setMethod($httpVerb) {
         $this->_httpMethod =$httpVerb;
     }
 
@@ -197,8 +188,7 @@ class HttpRequest
      *
      * @return Uri
      */
-    public function getUri()
-    {
+    public function getUri() {
         return $this->_url;
     }
 
@@ -207,8 +197,7 @@ class HttpRequest
      *
      * @param Uri $url
      */
-    public function setUri($url)
-    {
+    public function setUri($url) {
         $this->_url = $url;
     }
 
@@ -217,8 +206,7 @@ class HttpRequest
      *
      * @return HttpProxy
      */
-    public function getProxy()
-    {
+    public function getProxy() {
         return $this->_proxy;
     }
 
@@ -227,8 +215,7 @@ class HttpRequest
      *
      * @param HttpProxy $proxy
      */
-    public function setProxy($proxy)
-    {
+    public function setProxy($proxy) {
         $this->_proxy = $proxy;
     }
 
@@ -237,8 +224,7 @@ class HttpRequest
      *
      * @return ACSCredential/AzureTableCredential/WindowsCredential
      */
-    public function getCredential()
-    {
+    public function getCredential() {
         return $this->_credential;
     }
 
@@ -247,8 +233,7 @@ class HttpRequest
      *
      * @param $credential ACSCredential/AzureTableCredential/WindowsCredential
      */
-    public function setCredential($credential)
-    {
+    public function setCredential($credential) {
         $this->_credential = $credential;
     }
 
@@ -257,11 +242,9 @@ class HttpRequest
      *
      * @throws InvalidOperation
      */
-    protected function _finalize()
-    {
+    protected function _finalize() {
         curl_setopt($this->_curlHandle, CURLOPT_URL, $this->_url);
-        switch ($this->_httpMethod)
-        {
+        switch ($this->_httpMethod) {
             case HttpVerb::GET:
                 curl_setopt($this->_curlHandle, CURLOPT_HTTPGET, true);
                 break;
@@ -277,46 +260,37 @@ class HttpRequest
                 break;
         }
 
-        if (isset($this->_credential))
-        {
-            if($this->_credential->getCredentialType() == CredentialType::WINDOWS)
-            {
+        if (isset($this->_credential)) {
+            if($this->_credential->getCredentialType() == CredentialType::WINDOWS) {
                 $userNamePwd = $this->_credential->getUserName() .
                                ":" .
                                $this->_credential->getPassword();
                 curl_setopt($this->_curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
                 curl_setopt($this->_curlHandle, CURLOPT_USERPWD, $userNamePwd);
-            }
-            else
-            {
+            } else {
                 $this->_credential->SetProxy($this->_proxy);
                 $headers = $this->_credential->GetSingedHeaders($this->_url);
                 $this->Headers->CopyFrom($headers);
             }
         }
 
-        if (isset($this->_proxy))
-        {
+        if (isset($this->_proxy)) {
             $proxyip_port = $this->_proxy->getProxyAddress() .
                             ":" .
                             $this->_proxy->getProxyPort();
             curl_setopt($this->_curlHandle, CURLOPT_PROXY, $proxyip_port);
             $proxyUserName = $this->_proxy->getUserName();
-            if($proxyUserName)
-            {
+            if($proxyUserName) {
             	curl_setopt($this->_curlHandle, CURLOPT_PROXYUSERPWD,
                             $proxyUserName . ":" . $this->_proxy->getPassword());
                 curl_setopt($this->_curlHandle, CURLOPT_HTTPPROXYTUNNEL, 1);
             }
         }
 
-         if (!is_null($this->_requestBody))
-        {
-            if($this->_isPostBody)
-            {
+         if (!is_null($this->_requestBody)) {
+            if($this->_isPostBody) {
                 if($this->_httpMethod != HttpVerb::POST &&
-                   $this->_httpMethod != HttpVerb::MERGE)
-                {
+                   $this->_httpMethod != HttpVerb::MERGE) {
                     throw new InvalidOperation(Resource::InvalidHttpVerbForSetPostBody);
                 }
 
@@ -329,9 +303,7 @@ class HttpRequest
                 //along with POST body, so the length we specifed not be correct.
                 //So do not specifiy this header. cURL will set this field based
                 //on correct post size
-            }
-            else
-            {
+            } else {
                 $this->_putFileHandle = tmpfile();
                 fwrite($this->_putFileHandle, $this->_requestBody);
                 fseek($this->_putFileHandle, 0);
@@ -344,13 +316,11 @@ class HttpRequest
 
         $headers1 = array();
         $headers2 = $this->Headers->GetAll();
-        foreach ($headers2 as $key => $value)
-        {
+        foreach ($headers2 as $key => $value) {
             $headers1[] = $key.': '.$value;
         }
 
-        if(!empty($headers1))
-        {
+        if(!empty($headers1)) {
             curl_setopt($this->_curlHandle, CURLOPT_HTTPHEADER, $headers1);
         }
     }
@@ -361,8 +331,7 @@ class HttpRequest
      *
      * @param array $headers
      */
-    public function ApplyHeaders($headers = array())
-    {
+    public function ApplyHeaders($headers = array()) {
         $this->Headers->CopyFrom($headers);
     }
 
@@ -371,8 +340,7 @@ class HttpRequest
      *
      * @return array
      */
-    public function getHeaders()
-    {
+    public function getHeaders() {
         return $this->Headers->GetAll();
     }
 
@@ -383,26 +351,20 @@ class HttpRequest
     * @return string
     * @throws InvalidOperation
     */
-    public function GetResponse()
-    {
+    public function GetResponse() {
         $this->_finalize();
         $httpResponse = curl_exec($this->_curlHandle);
-        if ($httpResponse)
-        {
-            if($this->_putFileHandle != null)
-            {
+        if ($httpResponse) {
+            if($this->_putFileHandle != null) {
                 fclose($this->_putFileHandle);
             }
 
             curl_close($this->_curlHandle);
             return $httpResponse;
-        }
-        else
-        {
+        } else {
             throw new InvalidOperation('Error occured during request for ' .
                                         $this->_url . ': ' .
                                         curl_error($this->_curlHandle));
         }
     }
 }
-?>

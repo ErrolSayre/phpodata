@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class HttpRequestHeader
-{
+class HttpRequestHeader {
     const Accept = 'Accept';
     const AcceptCharset = 'Accept-Charset';
     const AcceptEncoding = 'Accept-Encoding';
@@ -68,4 +67,3 @@ class HttpRequestHeader
     const Warning = 'Warning';
     const XHTTPMethod = 'X-HTTP-Method';
 }
-?>

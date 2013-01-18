@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class HttpBatchRequest
-{
+class HttpBatchRequest {
 
     /**
      * Instance of HttpRequest to perfrom batch request.
@@ -41,11 +40,9 @@ class HttpBatchRequest
      */
     public function HttpBatchRequest($url, $batchBoundary, $batchRequestBody,
                                      $credential, $proxy, $headers = array(),
-                                     $credentialsInHeaders = false)
-    {
+                                     $credentialsInHeaders = false) {
         $requestHeaders = array();
-        foreach ($headers as $key => $value)
-        {
+        foreach ($headers as $key => $value) {
             $requestHeaders[$key] = $value;
         }
 
@@ -63,8 +60,7 @@ class HttpBatchRequest
      *
      * @return HttpRequest
      */
-    public function GetRawHttpRequest()
-    {
+    public function GetRawHttpRequest() {
         return $this->_httpRequest;
     }
 
@@ -74,10 +70,9 @@ class HttpBatchRequest
      *
      * @return HttpBatchResponse
      */
-    public function GetResponse()
-    {
+    public function GetResponse() {
         $rawHttpBatchResponse = $this->_httpRequest->GetResponse();
         return HttpBatchResponse::Create($rawHttpBatchResponse);
     }
 }
-?>
+

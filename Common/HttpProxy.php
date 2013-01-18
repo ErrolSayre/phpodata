@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class HttpProxy
-{
+class HttpProxy {
     /**
      *
      * @var <url>
@@ -53,8 +52,7 @@ class HttpProxy
      * @param <string> $username
      * @param <string> $password
      */
-    public function HttpProxy($address, $port, $username = null, $password = null)
-    {
+    public function HttpProxy($address, $port, $username = null, $password = null) {
         $this->_address = $address;
         $this->_port = $port;
         $this->_username = $username;
@@ -66,8 +64,7 @@ class HttpProxy
      *
      * @return <string> Proxy Address
      */
-    public function getProxyAddress()
-    {
+    public function getProxyAddress() {
         return $this->_address;
     }
 
@@ -76,8 +73,7 @@ class HttpProxy
      *
      * @return <string> Proxy Port
      */
-    public function getProxyPort()
-    {
+    public function getProxyPort() {
         return $this->_port;
     }
 
@@ -86,8 +82,7 @@ class HttpProxy
      *
      * @return <string> Proxy UserName
      */
-    public function getUserName()
-    {
+    public function getUserName() {
   		return $this->_username;
     }
 
@@ -96,9 +91,7 @@ class HttpProxy
      *
      * @return <string> Proxy Password
      */
-    public function getPassword()
-    {
+    public function getPassword() {
     	return $this->_password;
     }
 };
-?>

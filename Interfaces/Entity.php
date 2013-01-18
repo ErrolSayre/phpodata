@@ -21,8 +21,7 @@
  *
  * The base class for Resourcebox and RelatedEnd classes.
  */
-abstract class Entity
-{
+abstract class Entity {
     /**
      * To hold ChangeOrder of Resourcebox or RelatedEnd.
      *
@@ -42,4 +41,3 @@ abstract class Entity
      */
     public abstract function IsResource();
 }
-?>

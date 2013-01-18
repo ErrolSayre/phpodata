@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class CredentialType
-{
+class CredentialType {
    /**
     * Windows Credential (Basic, NTLM or Kerbose).
     *
@@ -39,4 +38,3 @@ class CredentialType
     */
    const ACS = 'ACS';
 }
-?>

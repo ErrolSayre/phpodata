@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class QueryComponents
-{
+class QueryComponents {
 
     /**
      *
@@ -39,10 +38,9 @@ class QueryComponents
      * @param Uri $uri
      * @param string $version
      */
-    public function QueryComponents($uri, $version)
-    {
+    public function QueryComponents($uri, $version) {
         $this->Uri = $uri;
         $this->Version = $version;
     }
 }
-?>
+

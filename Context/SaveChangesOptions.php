@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class SaveChangesOptions
-{
+class SaveChangesOptions {
     /**
      * Non-Batch request.
      *
@@ -33,4 +32,3 @@ class SaveChangesOptions
      */
     const Batch = 1;
 }
-?>

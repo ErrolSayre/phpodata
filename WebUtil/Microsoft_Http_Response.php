@@ -42,8 +42,7 @@
  * @copyright  Copyright (c) 2009, RealDolmen (http://www.realdolmen.com)
  * @license    http://phpazure.codeplex.com/license
  */
-class Microsoft_Http_Response
-{
+class Microsoft_Http_Response {
     /**
      * List of all known HTTP response status codes
      *
@@ -148,8 +147,7 @@ class Microsoft_Http_Response
      * @param string $version HTTP version
      * @throws Microsoft_Http_Exception
      */
-    public function __construct($code, $headers, $body = null, $version = '1.1')
-    {
+    public function __construct($code, $headers, $body = null, $version = '1.1') {
         // Code
         $this->_code = $code;
         
@@ -166,21 +164,15 @@ class Microsoft_Http_Response
         $this->_version = $version;
         
         // Headers
-        if (!is_array($headers))
-        {
+        if (!is_array($headers)) {
             throw new Exception('No valid headers were passed');
-        }
-        else 
-        {
+        } else {
             foreach ($headers as $name => $value) {
                 if (is_int($name))
                     list($name, $value) = explode(":", $value, 1);
-				if(is_array($value))
-				{
+				if(is_array($value)) {
 					$this->_headers[ucwords(strtolower($name))] = $value;
-				}
-				else				
-				{
+				} else {
 					$this->_headers[ucwords(strtolower($name))] = trim($value);
 				}
             }
@@ -192,8 +184,7 @@ class Microsoft_Http_Response
      *
      * @return boolean
      */
-    public function isError()
-    {
+    public function isError() {
         $restype = floor($this->_code / 100);
         return ($restype == 4 || $restype == 5);
     }
@@ -203,8 +194,7 @@ class Microsoft_Http_Response
      *
      * @return boolean
      */
-    public function isSuccessful()
-    {
+    public function isSuccessful() {
         $restype = floor($this->_code / 100);
         return ($restype == 2 || $restype == 1);
     }
@@ -214,8 +204,7 @@ class Microsoft_Http_Response
      *
      * @return boolean
      */
-    public function isRedirect()
-    {
+    public function isRedirect() {
         $restype = floor($this->_code / 100);
         return ($restype == 3);
     }
@@ -225,8 +214,7 @@ class Microsoft_Http_Response
      *
      * @return string
      */
-    public function getVersion()
-    {
+    public function getVersion() {
         return $this->_version;
     }
 
@@ -235,8 +223,7 @@ class Microsoft_Http_Response
      *
      * @return int
      */
-    public function getCode()
-    {
+    public function getCode() {
         return $this->_code;   
     }
 
@@ -246,8 +233,7 @@ class Microsoft_Http_Response
      *
      * @return string
      */
-    public function getMessage()
-    {
+    public function getMessage() {
         return $this->_message;   
     }
 
@@ -256,10 +242,8 @@ class Microsoft_Http_Response
      *
      * @return array
      */
-    public function getHeaders()
-    {
-        if (!is_array($this->_headers))
-        {
+    public function getHeaders() {
+        if (!is_array($this->_headers)) {
             $this->_headers = array();
         }
         return $this->_headers;
@@ -271,8 +255,7 @@ class Microsoft_Http_Response
      * @param string $header
      * @return string|array|null
      */
-    public function getHeader($header)
-    {
+    public function getHeader($header) {
         $header = ucwords(strtolower($header));
         if (!is_string($header) || ! isset($this->_headers[$header])) return null;
 
@@ -284,8 +267,7 @@ class Microsoft_Http_Response
      *
      * @return string
      */
-    public function getBody()
-    {
+    public function getBody() {
         return $this->_body;
     }
 
@@ -294,8 +276,7 @@ class Microsoft_Http_Response
      * 
      * @return string
      */
-    public function getHTMLFriendlyBody()
-    {
+    public function getHTMLFriendlyBody() {
         return nl2br(htmlspecialchars($this->_body));
     }
 
@@ -305,8 +286,7 @@ class Microsoft_Http_Response
      * @param string $responseString
      * @return int
      */
-    public static function extractCode($responseString)
-    {
+    public static function extractCode($responseString) {
         preg_match("|^HTTP/[\d\.x]+ (\d+)|", $responseString, $m);
 
         if (isset($m[1])) {
@@ -322,8 +302,7 @@ class Microsoft_Http_Response
      * @param string $responseString
      * @return string
      */
-    public static function extractMessage($responseString)
-    {
+    public static function extractMessage($responseString) {
         preg_match("|^HTTP/[\d\.x]+ \d+ ([^\r\n]+)|", $responseString, $m);
 
         if (isset($m[1])) {
@@ -339,8 +318,7 @@ class Microsoft_Http_Response
      * @param string $responseString
      * @return string
      */
-    public static function extractVersion($responseString)
-    {
+    public static function extractVersion($responseString) {
         preg_match("|^HTTP/([\d\.x]+) \d+|", $responseString, $m);
 
         if (isset($m[1])) {
@@ -356,8 +334,7 @@ class Microsoft_Http_Response
      * @param string $responseString
      * @return array
      */
-    public static function extractHeaders($responseString)
-    {
+    public static function extractHeaders($responseString) {
         $headers = array();
         
         // First, split body and headers
@@ -408,8 +385,7 @@ class Microsoft_Http_Response
      * @param string $response_str
      * @return string
      */
-    public static function extractBody($responseString)
-    {
+    public static function extractBody($responseString) {
         $parts = preg_split('|(?:\r?\n){2}|m', $responseString, 2);
         if (isset($parts[1])) { 
             return $parts[1];
@@ -423,8 +399,7 @@ class Microsoft_Http_Response
      * @param string $response_str
      * @return Microsoft_Http_Response
      */
-    public static function fromString($response_str)
-    {
+    public static function fromString($response_str) {
         $code    = self::extractCode($response_str);
         $headers = self::extractHeaders($response_str);
         $body    = self::extractBody($response_str);

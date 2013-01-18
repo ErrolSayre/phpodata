@@ -19,54 +19,49 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class TableEntry extends Object
-{
-    protected $_baseURI;
-    protected $_obectID;
-    protected $_relLinks  = array();
+class TableEntry extends Object {
+	protected $_baseURI;
+	protected $_obectID;
+	protected $_relLinks  = array();
 
-    /**
-     * @Type:EntityProperty
-     */
-    public $PartitionKey;
+	/**
+	 * @Type:EntityProperty
+	 */
+	public $PartitionKey;
 
-    /**
-     * @Type:EntityProperty
-     */
-    public $RowKey;
+	/**
+	 * @Type:EntityProperty
+	 */
+	public $RowKey;
 
-     /**
-     * @Type:EntityProperty
-     */
-    public $Timestamp;
+	/**
+	 * @Type:EntityProperty
+	 */
+	public $Timestamp;
 
-    /**
-     *
-     * @param <Uri> $uri
-     */
-    public function __construct($uri="")
-    {
-        $this->_baseURI = $uri;
-        $this->Timestamp = '1900-01-01T00:00:00';
-        $this->_objectID = Guid::NewGuid();
-    }
+	/**
+	 *
+	 * @param <Uri> $uri
+	 */
+	public function __construct($uri="") {
+		$this->_baseURI = $uri;
+		$this->Timestamp = '1900-01-01T00:00:00';
+		$this->_objectID = Guid::NewGuid();
+	}
 
-    /**
-     *
-     * @return <GUID>
-     */
-    public function getObjectID()
-    {
-        return $this->_objectID;
-    }
+	/**
+	 *
+	 * @return <GUID>
+	 */
+	public function getObjectID() {
+		return $this->_objectID;
+	}
 
-    /**
-     *
-     * @param <array> $relLinks
-     */
-    public function setRelatedLinks($relLinks)
-    {
-        $this->_relLinks = $relLinks;
-    }
+	/**
+	 *
+	 * @param <array> $relLinks
+	 */
+	public function setRelatedLinks($relLinks) {
+		$this->_relLinks = $relLinks;
+	}
 }
-?>

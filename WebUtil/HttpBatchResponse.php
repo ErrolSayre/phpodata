@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class HttpBatchResponse
-{
+class HttpBatchResponse {
     /**
      * Collection of HttpResponse objects, each represents one changeset.
      *
@@ -57,8 +56,7 @@ class HttpBatchResponse
      * Construct a HttpBatchResponse object
      */
     public function HttpBatchResponse($httpResponses, $rawHttpBatchResponse,
-                                      $changesetBoundary)
-    {
+                                      $changesetBoundary) {
         $this->_httpResponses = $httpResponses;
         $this->_rawHttpBatchResponse = $rawHttpBatchResponse;
         $this->_changesetBoundary = $changesetBoundary;
@@ -74,10 +72,8 @@ class HttpBatchResponse
      *
      * @return int
      */
-    public function GetCode()
-    {
-        if($this->_correctHttpLine != null)
-        {
+    public function GetCode() {
+        if($this->_correctHttpLine != null) {
             preg_match("|^HTTP/[\d\.x]+ (\d+)|", $this->_correctHttpLine, $m);
             if (isset($m[1])) { return (int)$m[1]; }
         }
@@ -94,10 +90,8 @@ class HttpBatchResponse
      *
      * @return int
      */
-    public function GetMessage()
-    {
-        if($this->_correctHttpLine != null)
-        {
+    public function GetMessage() {
+        if($this->_correctHttpLine != null) {
             preg_match("|^HTTP/[\d\.x]+ \d+ ([^\r\n]+)|",
                        $this->_correctHttpLine, $m);
             if (isset($m[1])) { return $m[1]; }
@@ -114,13 +108,10 @@ class HttpBatchResponse
      *
      * @return boolean
      */
-    public function IsError()
-    {
-        if($this->_correctHttpLine != null)
-        {
+    public function IsError() {
+        if($this->_correctHttpLine != null) {
             preg_match("|^HTTP/[\d\.x]+ (\d+)|", $this->_correctHttpLine, $m);
-            if (isset($m[1]))
-            {
+            if (isset($m[1])) {
                 $floorVal = floor((int)$m[1] / 100);
                 return ($floorVal == 4 || $floorVal == 5);
             }
@@ -134,8 +125,7 @@ class HttpBatchResponse
      *
      * @return array
      */
-    public function GetHeaders()
-    {
+    public function GetHeaders() {
         return HttpResponse::extractHeaders($this->_rawHttpBatchResponse);
     }
 
@@ -144,8 +134,7 @@ class HttpBatchResponse
      *
      * @return string
      */
-    public function GetRawHttpResponse()
-    {
+    public function GetRawHttpResponse() {
         return $this->_rawHttpBatchResponse;
     }
 
@@ -154,8 +143,7 @@ class HttpBatchResponse
      *
      * @return Microsoft_Http_Response
      */
-    public function GetAsHttpResponse()
-    {
+    public function GetAsHttpResponse() {
         $parts = explode("--" . $this->_changesetBoundary,
                          $this->_rawHttpBatchResponse, 2);
         return new Microsoft_Http_Response($this->GetCode(),
@@ -171,8 +159,7 @@ class HttpBatchResponse
      *
      * @return array
      */
-    public function GetSubBatchHttpResponses()
-    {
+    public function GetSubBatchHttpResponses() {
         return $this->_httpResponses;
     }
 
@@ -182,15 +169,12 @@ class HttpBatchResponse
      * @param string $httpBatchResponse
      * @param HttpBatchResponse
      */
-    public static function Create($httpBatchResponse)
-    {
+    public static function Create($httpBatchResponse) {
         $changesetBoundary = null;
         $httpResponses = array();
-        if (!self::CheckIsError($httpBatchResponse))
-        {
+        if (!self::CheckIsError($httpBatchResponse)) {
             $changesetBoundary = HttpBatchResponse::ExtractChangesetBoundary($httpBatchResponse);
-            if (!isset($changesetBoundary))
-            {
+            if (!isset($changesetBoundary)) {
                 throw new InvalidOperation(Resource::InvalidBatchResponseNoCSBoundary);
             }
 
@@ -209,14 +193,11 @@ class HttpBatchResponse
      * @param string $rawHttpBatchResponse
      * @return bool
      */
-    protected static function CheckIsError($rawHttpBatchResponse)
-    {
+    protected static function CheckIsError($rawHttpBatchResponse) {
         $httpLine = self::ExtractCorrectHttpLine($rawHttpBatchResponse);
-        if($httpLine != null)
-        {
+        if($httpLine != null) {
             preg_match("|^HTTP/[\d\.x]+ (\d+)|", $httpLine, $m);
-            if (isset($m[1]))
-            {
+            if (isset($m[1])) {
                 $floorVal = floor((int)$m[1] / 100);
                 return ($floorVal == 4 || $floorVal == 5);
             }
@@ -236,16 +217,12 @@ class HttpBatchResponse
      * @return string http line (ex: HTTP/1.1 202 Accepted)
      *
      */
-    protected static function ExtractCorrectHttpLine($rawHttpBatchResponse)
-    {
+    protected static function ExtractCorrectHttpLine($rawHttpBatchResponse) {
         if(preg_match_all("|HTTP/[\d\.x]+ \d+ [^\r\n]+|", $rawHttpBatchResponse,
-                          $multiArray, PREG_OFFSET_CAPTURE))
-        {
-            if (isset($multiArray[0]))
-            {
+                          $multiArray, PREG_OFFSET_CAPTURE)) {
+            if (isset($multiArray[0])) {
                 if (!(isset($multiArray[0][0]) &&
-                      isset($multiArray[0][0][0])))
-                {
+                      isset($multiArray[0][0][0]))) {
                     return null;
                 }
 
@@ -254,20 +231,14 @@ class HttpBatchResponse
                 unset($multiArray[0][0]);
                 //If BatchBoundry tag is not present, then return the last HTTP
                 //line from the collection.
-                if($index == -1)
-                {
+                if($index == -1) {
                     $count = count($multiArray[0]);
-                    if($count > 0)
-                    {
+                    if($count > 0) {
                         $prevHeader = $multiArray[0][$count][0];
                     }
-                }
-                else
-                {
-                    foreach($multiArray[0] as $array)
-                    {
-                        if ($array[1] > $index)
-                        {
+                } else {
+                    foreach($multiArray[0] as $array) {
+                        if ($array[1] > $index) {
                             break;
                         }
 
@@ -288,8 +259,7 @@ class HttpBatchResponse
      * @param string $rawHttpBatchResponse
      * @return string
      */
-    protected static function ExtractChangesetBoundary($httpBatchResponse)
-    {
+    protected static function ExtractChangesetBoundary($httpBatchResponse) {
         preg_match("|boundary=(changesetresponse_[^\r\n]+)|",
                    $httpBatchResponse, $m);
         if (isset($m[1])) { return $m[1]; }
@@ -302,8 +272,7 @@ class HttpBatchResponse
      * @param string $rawHttpBatchResponse
      * @return int The index of batch boundary string
      */
-    protected static function ExtractBatchBoundaryIndex($httpBatchResponse)
-    {
+    protected static function ExtractBatchBoundaryIndex($httpBatchResponse) {
         preg_match("|boundary=(batchresponse_[^\r\n]+)|", $httpBatchResponse,
                    $m, PREG_OFFSET_CAPTURE);
         if (isset($m[1]) && isset($m[1][1])) { return $m[1][1]; }
@@ -319,20 +288,17 @@ class HttpBatchResponse
      * @param string changesetBoundary
      * @return array
      */
-    protected static function ExtractHttpResponses($httpBatchResponse, $changesetBoundary)
-    {
+    protected static function ExtractHttpResponses($httpBatchResponse, $changesetBoundary) {
         $httpResponses = array();
         $parts = explode( "--" . $changesetBoundary, $httpBatchResponse);
         $count = count($parts);
-        if($count < 2)
-        {
+        if($count < 2) {
             return $httpResponses;
         }
 
         unset($parts[0]);
         unset($parts[$count-1]);
-        foreach ($parts as $changeSet)
-        {
+        foreach ($parts as $changeSet) {
             $subParts = preg_split('|(?:\r?\n){2}|m', $changeSet, 2);
             $httpResponses[] = Microsoft_Http_Response::fromString($subParts[1]);
         }
@@ -340,4 +306,3 @@ class HttpBatchResponse
         return $httpResponses;
     }
 }
-?>

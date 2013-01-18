@@ -21,8 +21,7 @@
  *
  * To Represent additional metadata that is included in a request message to the OData service.
  */
-class DataServiceRequestArgs
-{
+class DataServiceRequestArgs {
     /**
      *
      * @var array
@@ -33,8 +32,7 @@ class DataServiceRequestArgs
      * To construct DataServiceRequestArgs instance.
      *
      */
-    public function DataServiceRequestArgs()
-    {
+    public function DataServiceRequestArgs() {
         $this->_headers = array();
     }
 
@@ -44,10 +42,8 @@ class DataServiceRequestArgs
      * @param HttpRequestHeader::* $header
      * @Return string
      */
-    protected function GetHeaderValue($header)
-    {
-        if(array_key_exists($header, $this->_headers))
-        {
+    protected function GetHeaderValue($header) {
+        if(array_key_exists($header, $this->_headers)) {
             return $this->_headers[$header];
         }
 
@@ -60,17 +56,12 @@ class DataServiceRequestArgs
      * @param HttpRequestHeader::* $header
      * @param string $value
      */
-    protected function SetHeaderValue($header, $value)
-    {
-        if($value == null)
-        {
-            if(array_key_exists($header, $this->_headers))
-            {
+    protected function SetHeaderValue($header, $value) {
+        if($value == null) {
+            if(array_key_exists($header, $this->_headers)) {
                 unset($this->_headers[$header]);
             }
-        }
-        else
-        {
+        } else {
             $this->_headers[$header] = $value;
         }
     }
@@ -80,8 +71,7 @@ class DataServiceRequestArgs
      *
      * @param string $value
      */
-    public function getAcceptContentType()
-    {
+    public function getAcceptContentType() {
         return self::GetHeaderValue(HttpRequestHeader::Accept);
     }
 
@@ -90,8 +80,7 @@ class DataServiceRequestArgs
      *
      * @param string $value
      */
-    public function setAcceptContentType($value)
-    {
+    public function setAcceptContentType($value) {
         self::SetHeaderValue(HttpRequestHeader::Accept, $value);
     }
 
@@ -100,8 +89,7 @@ class DataServiceRequestArgs
      *
      * @param string $value
      */
-    public function getContentType()
-    {
+    public function getContentType() {
         return self::GetHeaderValue(HttpRequestHeader::ContentType);
     }
 
@@ -110,8 +98,7 @@ class DataServiceRequestArgs
      *
      * @param string $value
      */
-    public function setContentType($value)
-    {
+    public function setContentType($value) {
         self::SetHeaderValue(HttpRequestHeader::ContentType, $value);
     }
 
@@ -120,8 +107,7 @@ class DataServiceRequestArgs
      *
      * @return string
      */
-    public function getSlug()
-    {
+    public function getSlug() {
         return self::GetHeaderValue(HttpRequestHeader::Slug);
     }
 
@@ -130,8 +116,7 @@ class DataServiceRequestArgs
      *
      * @return string
      */
-    public function setSlug($value)
-    {
+    public function setSlug($value) {
         self::SetHeaderValue(HttpRequestHeader::Slug, $value);
     }
 
@@ -140,9 +125,7 @@ class DataServiceRequestArgs
      *
      * @return array
      */
-    public function getHeaders()
-    {
+    public function getHeaders() {
         return $this->_headers;
     }
 }
-?>

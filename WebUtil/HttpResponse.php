@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class HttpResponse extends Microsoft_Http_Response
-{
+class HttpResponse extends Microsoft_Http_Response {
     /**
      *
      * This function will extract the final HTTP line. For example if Windows auth
@@ -35,16 +34,12 @@ class HttpResponse extends Microsoft_Http_Response
      * @return string http line (ex: HTTP/1.1 202 Accepted) on return $index will
      * contains the index of http line.
      */
-    protected static function ExtractCorrectHttpLine($rawHttpResponse, &$index = 0)
-    {
+    protected static function ExtractCorrectHttpLine($rawHttpResponse, &$index = 0) {
         if(preg_match_all ("|HTTP/[\d\.x]+ \d+ [^\r\n]+|", $rawHttpResponse,
-                           $multiArray, PREG_OFFSET_CAPTURE))
-        {
-            if (isset($multiArray[0]))
-            {
+                           $multiArray, PREG_OFFSET_CAPTURE)) {
+            if (isset($multiArray[0])) {
                 if (!(isset($multiArray[0][0]) &&
-                      isset($multiArray[0][0][0])))
-                {
+                      isset($multiArray[0][0][0]))) {
                     return null;
                 }
 
@@ -65,8 +60,7 @@ class HttpResponse extends Microsoft_Http_Response
      *
      * @param string $rawHttpResponse
      */
-    protected static function ExtractCorrectResponse($rawHttpResponse)
-    {
+    protected static function ExtractCorrectResponse($rawHttpResponse) {
         $index;
         self::ExtractCorrectHttpLine($rawHttpResponse, $index);
         return  substr($rawHttpResponse, $index);
@@ -78,8 +72,7 @@ class HttpResponse extends Microsoft_Http_Response
      * @param string $rawResponseString
      * @return int
      */
-    public static function extractCode($rawResponseString)
-    {
+    public static function extractCode($rawResponseString) {
         $responseString = self::ExtractCorrectResponse($rawResponseString);
         return parent::extractCode($responseString);
     }
@@ -90,8 +83,7 @@ class HttpResponse extends Microsoft_Http_Response
      * @param string $rawResponseString
      * @return string
      */
-    public static function extractMessage($rawResponseString)
-    {
+    public static function extractMessage($rawResponseString) {
         $responseString = self::ExtractCorrectResponse($rawResponseString);
         return parent::extractMessage($responseString);
     }
@@ -102,8 +94,7 @@ class HttpResponse extends Microsoft_Http_Response
      * @param string $rawResponseString
      * @return string
      */
-    public static function extractVersion($rawResponseString)
-    {
+    public static function extractVersion($rawResponseString) {
         $responseString = self::ExtractCorrectResponse($rawResponseString);
         return parent::extractVersion($responseString);
     }
@@ -114,8 +105,7 @@ class HttpResponse extends Microsoft_Http_Response
      * @param string $rawResponseString
      * @return array
      */
-    public static function extractHeaders($rawResponseString)
-    {
+    public static function extractHeaders($rawResponseString) {
         $responseString = self::ExtractCorrectResponse($rawResponseString);
         return parent::extractHeaders($responseString);
     }
@@ -126,8 +116,7 @@ class HttpResponse extends Microsoft_Http_Response
      * @param string $response_str
      * @return string
      */
-    public static function extractBody($rawResponseString)
-    {
+    public static function extractBody($rawResponseString) {
         $responseString = self::ExtractCorrectResponse($rawResponseString);
         return parent::extractBody($responseString);
     }
@@ -138,8 +127,7 @@ class HttpResponse extends Microsoft_Http_Response
      * @param string $response_str
      * @return Microsoft_Http_Response
      */
-    public static function fromString($response_str)
-    {
+    public static function fromString($response_str) {
         $code    = self::extractCode($response_str);
         $headers = self::extractHeaders($response_str);
         $body    = self::extractBody($response_str);
@@ -148,4 +136,3 @@ class HttpResponse extends Microsoft_Http_Response
         return new Microsoft_Http_Response($code, $headers, $body, $version, $message);
     }
 }
-?>

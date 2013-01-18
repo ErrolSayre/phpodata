@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class ACSUtilException extends Exception
-{
+class ACSUtilException extends Exception {
     /**
      *
      * @var string
@@ -45,8 +44,7 @@ class ACSUtilException extends Exception
      * @param string $errorStr Error String as plain string or Atom format
      * @param string $content_type
      */
-    public function ACSUtilException($errorStr, $headers = array(), $statusCode = '')
-    {
+    public function ACSUtilException($errorStr, $headers = array(), $statusCode = '') {
         $this->_error = $errorStr;
         $this->_headers = $headers;
         $this->_statusCode = $statusCode;
@@ -57,8 +55,7 @@ class ACSUtilException extends Exception
      *
      * @return string
      */
-    public function getError()
-    {
+    public function getError() {
         return $this->_error;
     }
 
@@ -67,8 +64,7 @@ class ACSUtilException extends Exception
      *
      * @return array
      */
-    public function getHeaders()
-    {
+    public function getHeaders() {
 	return $this->_headers;
     }
 
@@ -77,9 +73,8 @@ class ACSUtilException extends Exception
      *
      * @return int
      */
-    public function getStatusCode()
-    {
+    public function getStatusCode() {
         return $this->_statusCode;
     }
  }
-?>
+

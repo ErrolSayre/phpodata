@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class DataServiceQuery
-{
+class DataServiceQuery {
    /**
     * To hold the base url to an OData Service entity instance or set.
     *
@@ -88,8 +87,7 @@ class DataServiceQuery
     * @param <type> $entitySetUrl Partial Url pointing to entity Set in OData Service
     * @param <type> $context The DataService Context
     */
-   public function DataServiceQuery($entitySetUrl, $context)
-   {
+   public function DataServiceQuery($entitySetUrl, $context) {
        //Client is allowed to pass entitySet name in either
        //'EntitySetName' or '/EntitySetName' format (with or without slash)
        $entitySetUrl = ltrim($entitySetUrl, '/');
@@ -108,56 +106,40 @@ class DataServiceQuery
     *                            query option
     * @throws DataServiceRequestException
     */
-   public function AddQueryOption($option, $value)
-   {
+   public function AddQueryOption($option, $value) {
         $option = trim($option);
 
-        if(!isset($option) || $option == '')
-        {
+        if(!isset($option) || $option == '') {
             throw new DataServiceRequestException(self::CreateQueryOperationResponse(Resource::NoEmptyQueryOption));
         }
 
         if($option[0] == '$' &&
-           !in_array($option, self::$systemQueryOptions))
-        {
+           !in_array($option, self::$systemQueryOptions)) {
             throw new DataServiceRequestException(self::CreateQueryOperationResponse(Resource::ReservedCharNotAllowed . $option));
         }
 
-        if($option == '$expand')
-        {
+        if($option == '$expand') {
             $value = trim($value);
-            if(isset($value) && $value != '')
-            {
+            if(isset($value) && $value != '') {
                 $this->_expand[] = $value;
             }
-        }
-        else if($option == '$orderby')
-        {
+        } else if($option == '$orderby') {
             $value = trim($value);
-            if(isset($value) && $value != '')
-            {
+            if(isset($value) && $value != '') {
                 $this->_orderby[] = $value;
             }
-        }
-        else if($option == '$select')
-        {
+        } else if($option == '$select') {
             $value = trim($value);
-            if(isset($value) && $value != '')
-            {
+            if(isset($value) && $value != '') {
                 $this->_select[] = $value;
             }
-        }
-        else if(in_array($option, self::$systemQueryOptions))
-        {
-            if(array_key_exists($option, $this->_options))
-            {
+        } else if(in_array($option, self::$systemQueryOptions)) {
+            if(array_key_exists($option, $this->_options)) {
                 throw new DataServiceRequestException(self::CreateQueryOperationResponse(Resource::NoDuplicateOption . $option));
             }
 
             $this->_options[$option] = $value;
-        }
-        else
-        {
+        } else {
             $this->_other[] =  $option . '=' . $value;
         }
 
@@ -172,8 +154,7 @@ class DataServiceQuery
     *                            $expand query option
     * @throws DataServiceRequestException
     */
-   public function Expand($expression)
-   {
+   public function Expand($expression) {
        return $this->AddQueryOption('$expand', $expression);
    }
 
@@ -191,8 +172,7 @@ class DataServiceQuery
     *                            $orderby option
     * @throws DataServiceRequestException
     */
-   public function OrderBy($expression)
-   {
+   public function OrderBy($expression) {
        return $this->AddQueryOption('$orderby', $expression);
    }
 
@@ -212,8 +192,7 @@ class DataServiceQuery
     *                            $orderby option
     * @throws DataServiceRequestException
     */
-   public function Select($expression)
-   {
+   public function Select($expression) {
        return $this->AddQueryOption('$select', $expression);
    }
 
@@ -227,8 +206,7 @@ class DataServiceQuery
     *                            $top option
     * @throws DataServiceRequestException
     */
-   public function Top($count)
-   {
+   public function Top($count) {
         return $this->AddQueryOption('$top', $count);
    }
 
@@ -244,8 +222,7 @@ class DataServiceQuery
     *                            $skip option
     * @throws DataServiceRequestException
     */
-   public function Skip($count)
-   {
+   public function Skip($count) {
         return $this->AddQueryOption('$skip', $count);
    }
 
@@ -264,8 +241,7 @@ class DataServiceQuery
     *                            $filter option
     * @throws DataServiceRequestException
     */
-   public function Filter($expression)
-   {
+   public function Filter($expression) {
 //	$expression = str_replace("~"," ",$expression);
        return $this->AddQueryOption('$filter', $expression);
    }
@@ -285,8 +261,7 @@ class DataServiceQuery
     *                            $inlinecount=allpages query option
     * @throws DataServiceRequestException
     */
-   public function IncludeTotalCount()
-   {
+   public function IncludeTotalCount() {
        return $this->AddQueryOption('$inlinecount', 'allpages');
    }
 
@@ -301,10 +276,8 @@ class DataServiceQuery
     * @return int Returns Row count
     * @throws DataServiceRequestException
     */
-   public function Count()
-   {
-       if(array_key_exists('$inlinecount', $this->_options))
-       {
+   public function Count() {
+       if(array_key_exists('$inlinecount', $this->_options)) {
            throw new DataServiceRequestException(self::CreateQueryOperationResponse(Resource::NoCountAndInLineCount));
        }
 
@@ -322,8 +295,7 @@ class DataServiceQuery
                                                              Resource::DataServiceVersion_2,
                                                              $isError,
                                                              $innerException);
-       if($isError)
-       {
+       if($isError) {
            $queryOperationResponse = new QueryOperationResponse($response->getHeaders(),
                                                                 $innerException,
                                                                 $response->getCode(),
@@ -340,8 +312,7 @@ class DataServiceQuery
     * @return QueryOperationResponse
     * @throws DataServiceRequestException
     */
-   public function Execute()
-   {
+   public function Execute() {
        $queryOption = self::buildQueryOption();
        $query = $this->_entitySetUrl . '?' . $queryOption;
        $requestVersion = Resource::DataServiceVersion_1;
@@ -354,8 +325,7 @@ class DataServiceQuery
        if((strpos($query, '$inlinecount') !== FALSE)||
           (strpos($query, '$count') !== FALSE)||
           (strpos($query, '$skiptoken') !== FALSE)||
-          (strpos($query, '$select') !== FALSE))
-       {
+          (strpos($query, '$select') !== FALSE)) {
            $requestVersion = Resource::DataServiceVersion_2;
        }
 
@@ -372,8 +342,7 @@ class DataServiceQuery
     *
     * @return Uri
     */
-   public function RequestUri()
-   {
+   public function RequestUri() {
         return $this->_entitySetUrl . '?' . self::buildQueryOption();
    }
 
@@ -381,8 +350,7 @@ class DataServiceQuery
     * Clear all options added.
     *
     */
-   public function ClearAllOptions()
-   {
+   public function ClearAllOptions() {
         $this->_options = array();
         $this->_expand = array();
         $this->_other = array();
@@ -393,74 +361,61 @@ class DataServiceQuery
     *
     * @return string The query options provided by client
     */
-   protected function buildQueryOption()
-   {
+   protected function buildQueryOption() {
        $this->_expand = array_unique($this->_expand);
        $expandOption = null;
-       foreach($this->_expand as $expand)
-       {
+       foreach($this->_expand as $expand) {
            $expandOption .= $expand . ',';
        }
 
-       if(isset($expandOption))
-       {
+       if(isset($expandOption)) {
            $expandOption = '$expand=' . $expandOption;
        }
 
        $this->_orderby = array_unique($this->_orderby);
        $orderbyOption = null;
-       foreach($this->_orderby as $orderby)
-       {
+       foreach($this->_orderby as $orderby) {
            $orderbyOption .= $orderby . ',';
        }
 
-       if(isset($orderbyOption))
-       {
+       if(isset($orderbyOption)) {
            $orderbyOption = '$orderby=' . $orderbyOption;
        }
 
        $this->_select = array_unique($this->_select);
        $selectOption = null;
-       foreach($this->_select as $select)
-       {
+       foreach($this->_select as $select) {
            $selectOption .= $select . ',';
        }
 
-       if(isset($selectOption))
-       {
+       if(isset($selectOption)) {
            $selectOption = '$select=' . $selectOption;
        }
 
        $query = null;
-       foreach($this->_options as $key => $value)
-       {
+       foreach($this->_options as $key => $value) {
            $query .= $key . '=' . $value . '&';
        }
 
-       foreach($this->_other as $other)
-       {
+       foreach($this->_other as $other) {
            $query .= $other . '&';
        }
 
-       if(!isset($query))
-       {
+       if(!isset($query)) {
            $query = '&';
        }
 
-       if(isset($expandOption))
-       {
+       if(isset($expandOption)) {
            $query = rtrim($query, '&');
            $query = $query . '&' . $expandOption . '&';
        }
 
-       if(isset($orderbyOption))
-       {
+       if(isset($orderbyOption)) {
            $query = rtrim($query, '&');
            $query = $query . '&' . $orderbyOption . '&';
        }
 
-       if(isset($selectOption))
-       {
+       if(isset($selectOption)) {
            $query = rtrim($query, '&');
            $query = $query . '&' . $selectOption . '&';
        }
@@ -475,12 +430,10 @@ class DataServiceQuery
     * @return QueryOperationResponse
     *
     */
-   protected function CreateQueryOperationResponse($errorMessage)
-   {
+   protected function CreateQueryOperationResponse($errorMessage) {
         $queryOperationResponse = new QueryOperationResponse(array(),
                                                              $errorMessage,
                                                              '','');
         return $queryOperationResponse;
    }
 }
-?>

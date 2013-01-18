@@ -19,33 +19,28 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class Tables extends Object
-{
-    protected $_baseURI;
-    protected $_obectID;
-    protected $_relLinks  = array();
+class Tables extends Object {
+	protected $_baseURI;
+	protected $_obectID;
+	protected $_relLinks  = array();
 
-    /**
-     *
-     * @Type:EntityProperty
-     */
-    public $TableName;
+	/**
+	 *
+	 * @Type:EntityProperty
+	 */
+	public $TableName;
 
-    public function Tables($uri = "")
-    {
-        $this->_objectID = Guid::NewGuid();
-        $this->_baseURI = $uri;
-    }
+	public function Tables($uri = "") {
+		$this->_objectID = Guid::NewGuid();
+		$this->_baseURI = $uri;
+	}
 
-    public function getObjectID()
-    {
-        return $this->_objectID;
-    }
+	public function getObjectID() {
+		return $this->_objectID;
+	}
 
-    public function setRelatedLinks($relLinks)
-    {
-        $this->_relLinks = $relLinks;
-    }
+	public function setRelatedLinks($relLinks) {
+		$this->_relLinks = $relLinks;
+	}
 
 }
-?>

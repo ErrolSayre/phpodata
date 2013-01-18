@@ -26,10 +26,9 @@ require_once dirname(dirname(__FILE__)).'/Credential/CredentialType.php';
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-abstract class CredentialBase
-{
+abstract class CredentialBase {
     public abstract function getCredentialType();
     public abstract function SetProxy($proxy);
     public abstract function GetSingedHeaders($requestUrl);
 }
-?>
+

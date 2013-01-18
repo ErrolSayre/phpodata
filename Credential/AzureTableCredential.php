@@ -26,8 +26,7 @@ require_once dirname(dirname(__FILE__)).'/Credential/CredentialBase.php';
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class AzureTableCredential extends CredentialBase
-{
+class AzureTableCredential extends CredentialBase {
     /**
      *
      * @var AzureTableUtil
@@ -40,8 +39,7 @@ class AzureTableCredential extends CredentialBase
      * @param string $userName The user Name
      * @return string  $password The Password
      */
-    public function AzureTableCredential($accountName, $accountKey, $usePathStyleUri = false)
-    {
+    public function AzureTableCredential($accountName, $accountKey, $usePathStyleUri = false) {
         $this->_azureTableUtil = new AzureTableUtil($accountName, $accountKey,
                                                     $usePathStyleUri = false);
     }
@@ -50,8 +48,7 @@ class AzureTableCredential extends CredentialBase
      *
      * @param HttpProxy $proxy
      */
-    public function SetProxy($proxy)
-    {
+    public function SetProxy($proxy) {
         //dummy
     }
 
@@ -60,8 +57,7 @@ class AzureTableCredential extends CredentialBase
      *
      * @param string $value
      */
-    public function setAccountName($value)
-    {
+    public function setAccountName($value) {
         $this->_azureTableUtil->setAccountName($value);
     }
 
@@ -70,8 +66,7 @@ class AzureTableCredential extends CredentialBase
      *
      * @param string $value
      */
-    public function setAccountkey($value)
-    {
+    public function setAccountkey($value) {
         $this->_azureTableUtil->setAccountkey($value);
     }
 
@@ -80,8 +75,7 @@ class AzureTableCredential extends CredentialBase
      *
      * @param boolean $value
      */
-    public function setUsePathStyleUri($value = false)
-    {
+    public function setUsePathStyleUri($value = false) {
         $this->_azureTableUtil->setUsePathStyleUri($value);
     }
 
@@ -91,8 +85,7 @@ class AzureTableCredential extends CredentialBase
      * @param Uri $requestUrl
      * @return array
      */
-    public function GetSingedHeaders($requestUrl)
-    {
+    public function GetSingedHeaders($requestUrl) {
         return $this->_azureTableUtil->GetSingedHeaders($requestUrl);
     }
 
@@ -101,9 +94,8 @@ class AzureTableCredential extends CredentialBase
      *
      * @return CredentailType::*
      */
-    public function getCredentialType()
-    {
+    public function getCredentialType() {
         return CredentialType::AZURE;
     }
 };
-?>
+

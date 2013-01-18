@@ -19,15 +19,13 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class Guid
-{
+class Guid {
     /**
      * Generate a unique id using MD5 algorithm
      *
      * @Return <string>
      */
-    public static function NewGuid()
-    {
+    public static function NewGuid() {
         $rawId = strtolower(md5(uniqid(rand(), true)));
         return substr($rawId, 0, 8).'-'
                         .substr($rawId, 8, 4).'-'
@@ -36,4 +34,3 @@ class Guid
                         .substr($rawId,20,12);
     }
 };
-?>

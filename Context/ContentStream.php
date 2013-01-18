@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class ContentStream
-{
+class ContentStream {
     /**
      *
      * @var <boolean>
@@ -39,8 +38,7 @@ class ContentStream
      * @param <text/binary> $stream
      * @param <boolean> $isKnownMemoryStream
      */
-    public function ContentStream($stream, $isKnownMemoryStream)
-    {
+    public function ContentStream($stream, $isKnownMemoryStream) {
         $this->_stream = $stream;
         $this->_isKnownMemoryStream = $isKnownMemoryStream;
     }
@@ -50,8 +48,7 @@ class ContentStream
      *
      * @return <text/binary>
      */
-    public function getStream()
-    {
+    public function getStream() {
         return $this->_stream;
     }
 
@@ -61,9 +58,8 @@ class ContentStream
      *
      * @return <boolean>
      */
-    public function IsKnownMemoryStream()
-    {
+    public function IsKnownMemoryStream() {
         return $this->_isKnownMemoryStream;
     }
 }
-?>
+

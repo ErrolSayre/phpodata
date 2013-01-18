@@ -19,8 +19,7 @@
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
  * @license    http://odataphp.codeplex.com/license
  */
-class Collection
-{
+class Collection {
     /**
      * the associative array.
      *
@@ -32,8 +31,7 @@ class Collection
      * Construct Collection instance.
      *
      */
-    public function Collection()
-    {
+    public function Collection() {
         $this->_keyValPairs = array();
     }
 
@@ -44,8 +42,7 @@ class Collection
      * @param <string> $key
      * @param <string> $value
      */
-    public function Add($key, $value)
-    {
+    public function Add($key, $value) {
         $this->Remove($key);
         $this->_keyValPairs[$key] = $value;
     }
@@ -55,11 +52,9 @@ class Collection
      *
      * @param <string> $key
      */
-    public function Remove($key)
-    {
+    public function Remove($key) {
         $actualKey = null;
-        if($this->_key($key, $actualKey))
-        {
+        if($this->_key($key, $actualKey)) {
             unset($this->_keyValPairs[$actualKey]);
         }
     }
@@ -71,11 +66,9 @@ class Collection
      * @param <string> [out] $value
      * @return <boolean>
      */
-    public function TryGetValue($key, &$value)
-    {
+    public function TryGetValue($key, &$value) {
         $actualKey = null;
-        if($this->_key($key, $actualKey))
-        {
+        if($this->_key($key, $actualKey)) {
             $value = $this->_keyValPairs[$actualKey];
             return true;
         }
@@ -90,8 +83,7 @@ class Collection
      * @param <type> $key
      * @return <bool>
      */
-    public function HasKey($key)
-    {
+    public function HasKey($key) {
         $actualKey = null;
         return $this->_key($key, $actualKey);
     }
@@ -101,8 +93,7 @@ class Collection
      *
      * @retrun <array>
      */
-    public function GetAllKeys()
-    {
+    public function GetAllKeys() {
         return array_keys($this->_keyValPairs);
     }
 
@@ -111,8 +102,7 @@ class Collection
      *
      * @return <array>
      */
-    public function GetAll()
-    {
+    public function GetAll() {
         return $this->_keyValPairs;
     }
 
@@ -121,10 +111,8 @@ class Collection
      *
      * @param <array> $srcArray
      */
-    public function CopyFrom($srcArray)
-    {
-        foreach ($srcArray as $key => $value)
-        {
+    public function CopyFrom($srcArray) {
+        foreach ($srcArray as $key => $value) {
             $this->Add($key, $value);
         }
     }
@@ -133,8 +121,7 @@ class Collection
      * To clear the collection.
      *
      */
-    public function Clear()
-    {
+    public function Clear() {
         unset($this->_keyValPairs);
         $this->_keyValPairs = array();
     }
@@ -146,12 +133,9 @@ class Collection
      * @param <string> [out] $actualKey
      * @return <boolean>
      */
-    protected function _key($cikey, &$actualKey)
-    {
-        foreach($this->_keyValPairs as $key => $value)
-        {
-            if(strcasecmp($key, $cikey) == 0)
-            {
+    protected function _key($cikey, &$actualKey) {
+        foreach($this->_keyValPairs as $key => $value) {
+            if(strcasecmp($key, $cikey) == 0) {
                 $actualKey = $key;
                 return true;
             }
@@ -160,4 +144,3 @@ class Collection
         return false;
     }
 }
-?>
