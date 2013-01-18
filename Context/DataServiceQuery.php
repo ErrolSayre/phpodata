@@ -266,6 +266,7 @@ class DataServiceQuery
     */
    public function Filter($expression)
    {
+//	$expression = str_replace("~"," ",$expression);
        return $this->AddQueryOption('$filter', $expression);
    }
 

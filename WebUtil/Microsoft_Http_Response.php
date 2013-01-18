@@ -33,11 +33,6 @@
  */
 
 /**
- * @see Microsoft_Http_Exception
- */
-//require_once 'Microsoft/Http/Exception.php';
-
-/**
  * Microsoft_Http_Response
  * 
  * This class is partially based on Zend Framework Zend_Http_Response - http://framework.zend.com

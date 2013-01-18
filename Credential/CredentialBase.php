@@ -15,7 +15,12 @@
    limitations under the License.
  */
 
-require_once ODATA_PATH.'Credential/CredentialType.php';
+/**
+ * In order to speed up the use of this library in landscapes with
+ * insanely complex include paths, utilize a means to directly reference
+ * files for includes.
+ */
+require_once dirname(dirname(__FILE__)).'/Credential/CredentialType.php';
 
 /*
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)

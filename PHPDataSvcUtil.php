@@ -15,14 +15,16 @@
    limitations under the License.
  */
 
-if(!defined("ODATA_PATH"))
-	define("ODATA_PATH","");
-
-$FILE_PATH = ODATA_PATH;
-
-require_once $FILE_PATH.'WebUtil/Microsoft_Http_Response.php';
-require_once $FILE_PATH.'WebUtil/HttpResponse.php';
-require_once $FILE_PATH.'Common/ACSUtil.php';
+/**
+ * In order to speed up the use of this library in landscapes with
+ * insanely complex include paths, utilize a means to directly reference
+ * files for includes.
+ */
+// since this variable will be in the global namespace, give it a likely unique name
+$PHPOData_Path = dirname(__FILE__);
+require_once $PHPOData_Path.'/WebUtil/Microsoft_Http_Response.php';
+require_once $PHPOData_Path.'/WebUtil/HttpResponse.php';
+require_once $PHPOData_Path.'/Common/ACSUtil.php';
 
 /*
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)

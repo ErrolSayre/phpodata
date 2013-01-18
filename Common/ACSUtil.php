@@ -15,20 +15,22 @@
    limitations under the License.
  */
 
-if(!defined("ODATA_PATH"))
-	define("ODATA_PATH");
-
-$FILE_PATH = ODATA_PATH;
-
-require_once $FILE_PATH.'Resource/Messages.php';
-require_once $FILE_PATH.'Common/Collection.php';
-require_once $FILE_PATH.'WebUtil/HttpVerb.php';
-require_once $FILE_PATH.'WebUtil/HttpRequest.php';
-require_once $FILE_PATH.'WebUtil/Microsoft_Http_Response.php';
-require_once $FILE_PATH.'WebUtil/HttpResponse.php';
-require_once $FILE_PATH.'Common/HttpProxy.php';
-require_once $FILE_PATH.'Exception/ACSUtilException.php';
-require_once $FILE_PATH.'Exception/InvalidOperation.php';
+/**
+ * In order to speed up the use of this library in landscapes with
+ * insanely complex include paths, utilize a means to directly reference
+ * files for includes.
+ */
+// since this variable will be in the global namespace, give it a likely unique name
+$PHPOData_Path = dirname(dirname(__FILE__));
+require_once $PHPOData_Path.'/Resource/Messages.php';
+require_once $PHPOData_Path.'/Common/Collection.php';
+require_once $PHPOData_Path.'/WebUtil/HttpVerb.php';
+require_once $PHPOData_Path.'/WebUtil/HttpRequest.php';
+require_once $PHPOData_Path.'/WebUtil/Microsoft_Http_Response.php';
+require_once $PHPOData_Path.'/WebUtil/HttpResponse.php';
+require_once $PHPOData_Path.'/Common/HttpProxy.php';
+require_once $PHPOData_Path.'/Exception/ACSUtilException.php';
+require_once $PHPOData_Path.'/Exception/InvalidOperation.php';
 
 /*
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)

@@ -128,7 +128,7 @@ class HttpRequest
                                         Resource::USER_AGENT);
         curl_setopt($this->_curlHandle, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($this->_curlHandle, CURLOPT_RETURNTRANSFER,  true);
-        curl_setopt($this->_curlHandle, CURLOPT_FOLLOWLOCATION,  true);
+        //curl_setopt($this->_curlHandle, CURLOPT_FOLLOWLOCATION,  true);
     }
 
     /**

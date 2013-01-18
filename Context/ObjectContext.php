@@ -15,58 +15,60 @@
    limitations under the License.
  */
 
-if(!defined("ODATA_PATH"))
-	define("ODATA_PATH");
-
-$FILE_PATH = ODATA_PATH;
-
-require_once $FILE_PATH.'Interfaces/Object.php';
-require_once $FILE_PATH.'Azure/TableEntry.php';
-require_once $FILE_PATH.'Azure/Tables.php';
-require_once $FILE_PATH.'Resource/Messages.php';
-require_once $FILE_PATH.'Common/Dictionary.php';
-require_once $FILE_PATH.'Common/Collection.php';
-require_once $FILE_PATH.'Context/EntityStates.php';
-require_once $FILE_PATH.'Interfaces/Entity.php';
-require_once $FILE_PATH.'Context/ResourceBox.php';
-require_once $FILE_PATH.'Context/RelatedEnd.php';
-require_once $FILE_PATH.'Context/SaveResult.php';
-require_once $FILE_PATH.'Common/Guid.php';
-require_once $FILE_PATH.'Common/ClientType.php';
-require_once $FILE_PATH.'Common/ACSUtil.php';
-require_once $FILE_PATH.'Common/AzureTableUtil.php';
-require_once $FILE_PATH.'Common/ContentType.php';
-require_once $FILE_PATH.'Credential/CredentialType.php';
-require_once $FILE_PATH.'Credential/CredentialBase.php';
-require_once $FILE_PATH.'Credential/AzureTableCredential.php';
-require_once $FILE_PATH.'Credential/ACSCredential.php';
-require_once $FILE_PATH.'Credential/WindowsCredential.php';
-require_once $FILE_PATH.'Common/Utility.php';
-require_once $FILE_PATH.'Context/DataServiceQueryContinuation.php';
-require_once $FILE_PATH.'Context/QueryComponents.php';
-require_once $FILE_PATH.'Context/QueryOperationResponse.php';
-require_once $FILE_PATH.'Context/DataServiceQuery.php';
-require_once $FILE_PATH.'Context/DataServiceStreamResponse.php';
-require_once $FILE_PATH.'Context/DataServiceRequestArgs.php';
-require_once $FILE_PATH.'Context/SaveChangesOptions.php';
-require_once $FILE_PATH.'Context/DataServiceSaveStream.php';
-require_once $FILE_PATH.'Context/ContentStream.php';
-require_once $FILE_PATH.'Context/DataServiceResponse.php';
-require_once $FILE_PATH.'Context/OperationResponse.php';
-require_once $FILE_PATH.'Parser/AtomParser.php';
-require_once $FILE_PATH.'WebUtil/HttpBatchRequest.php';
-require_once $FILE_PATH.'WebUtil/HttpBatchResponse.php';
-require_once $FILE_PATH.'WebUtil/HttpRequest.php';
-require_once $FILE_PATH.'WebUtil/Microsoft_Http_Response.php';
-require_once $FILE_PATH.'WebUtil/HttpResponse.php';
-require_once $FILE_PATH.'WebUtil/HttpRequestHeader.php';
-require_once $FILE_PATH.'WebUtil/HttpVerb.php';
-require_once $FILE_PATH.'Common/HttpProxy.php';
-require_once $FILE_PATH.'Exception/ODataServiceException.php';
-require_once $FILE_PATH.'Exception/DataServiceRequestException.php';
-require_once $FILE_PATH.'Exception/InvalidOperation.php';
-require_once $FILE_PATH.'Exception/ACSUtilException.php';
-require_once $FILE_PATH.'Exception/InternalError.php';
+/**
+ * In order to speed up the use of this library in landscapes with
+ * insanely complex include paths, utilize a means to directly reference
+ * files for includes.
+ */
+// since this variable will be in the global namespace, give it a likely unique name
+$PHPOData_Path = dirname(dirname(__FILE__));
+require_once $PHPOData_Path.'/Interfaces/Object.php';
+require_once $PHPOData_Path.'/Azure/TableEntry.php';
+require_once $PHPOData_Path.'/Azure/Tables.php';
+require_once $PHPOData_Path.'/Resource/Messages.php';
+require_once $PHPOData_Path.'/Common/Dictionary.php';
+require_once $PHPOData_Path.'/Common/Collection.php';
+require_once $PHPOData_Path.'/Context/EntityStates.php';
+require_once $PHPOData_Path.'/Interfaces/Entity.php';
+require_once $PHPOData_Path.'/Context/ResourceBox.php';
+require_once $PHPOData_Path.'/Context/RelatedEnd.php';
+require_once $PHPOData_Path.'/Context/SaveResult.php';
+require_once $PHPOData_Path.'/Common/Guid.php';
+require_once $PHPOData_Path.'/Common/ClientType.php';
+require_once $PHPOData_Path.'/Common/ACSUtil.php';
+require_once $PHPOData_Path.'/Common/AzureTableUtil.php';
+require_once $PHPOData_Path.'/Common/ContentType.php';
+require_once $PHPOData_Path.'/Credential/CredentialType.php';
+require_once $PHPOData_Path.'/Credential/CredentialBase.php';
+require_once $PHPOData_Path.'/Credential/AzureTableCredential.php';
+require_once $PHPOData_Path.'/Credential/ACSCredential.php';
+require_once $PHPOData_Path.'/Credential/WindowsCredential.php';
+require_once $PHPOData_Path.'/Common/Utility.php';
+require_once $PHPOData_Path.'/Context/DataServiceQueryContinuation.php';
+require_once $PHPOData_Path.'/Context/QueryComponents.php';
+require_once $PHPOData_Path.'/Context/QueryOperationResponse.php';
+require_once $PHPOData_Path.'/Context/DataServiceQuery.php';
+require_once $PHPOData_Path.'/Context/DataServiceStreamResponse.php';
+require_once $PHPOData_Path.'/Context/DataServiceRequestArgs.php';
+require_once $PHPOData_Path.'/Context/SaveChangesOptions.php';
+require_once $PHPOData_Path.'/Context/DataServiceSaveStream.php';
+require_once $PHPOData_Path.'/Context/ContentStream.php';
+require_once $PHPOData_Path.'/Context/DataServiceResponse.php';
+require_once $PHPOData_Path.'/Context/OperationResponse.php';
+require_once $PHPOData_Path.'/Parser/AtomParser.php';
+require_once $PHPOData_Path.'/WebUtil/HttpBatchRequest.php';
+require_once $PHPOData_Path.'/WebUtil/HttpBatchResponse.php';
+require_once $PHPOData_Path.'/WebUtil/HttpRequest.php';
+require_once $PHPOData_Path.'/WebUtil/Microsoft_Http_Response.php';
+require_once $PHPOData_Path.'/WebUtil/HttpResponse.php';
+require_once $PHPOData_Path.'/WebUtil/HttpRequestHeader.php';
+require_once $PHPOData_Path.'/WebUtil/HttpVerb.php';
+require_once $PHPOData_Path.'/Common/HttpProxy.php';
+require_once $PHPOData_Path.'/Exception/ODataServiceException.php';
+require_once $PHPOData_Path.'/Exception/DataServiceRequestException.php';
+require_once $PHPOData_Path.'/Exception/InvalidOperation.php';
+require_once $PHPOData_Path.'/Exception/ACSUtilException.php';
+require_once $PHPOData_Path.'/Exception/InternalError.php';
 
 /*
  * @copyright  Copyright (c) 2010, Persistent Systems Limited (http://www.persistentsys.com)
