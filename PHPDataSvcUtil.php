@@ -151,7 +151,7 @@ class PHPSvcUtil
         curl_setopt($curlHandle, CURLOPT_HEADER, true);
         curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
-        
+
         if(isset($this->_options['/auth']))
         {
             switch($this->_options['/auth'])
@@ -213,7 +213,7 @@ class PHPSvcUtil
         }
 
         $httpRawResponse = curl_exec($curlHandle);
-        
+
         if (!$httpRawResponse)
         {
             throw new Exception(self::$_messages['Request_Error'] .
