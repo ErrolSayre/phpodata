@@ -55,7 +55,6 @@ class PHPSvcUtil {
 	protected static $QUERY_EDM_2006_04_ENTITYCONTAINER = '//EDM_2006_04:EntityContainer';
 	protected static $QUERY_EDM_2008_09_ENTITYCONTAINER = '//EDM_2008_09:EntityContainer';
 	protected static $_messages = array(
-		'ServicePath_Not_Set' => "The configuration option 'ODataphp_path' is not set in the php.ini file, Please refer installation instructions for fix this issue",
 		'Request_Error' => 'Request for metadata failed; ',
 		'Cannot_Repeat_Option' => 'Option cannot be repeated: ',
 		'Invalid_Path_Usage' => "Using '/uri' and '/metadata' together not allowed",
@@ -97,15 +96,10 @@ class PHPSvcUtil {
 	public function generateProxy() {
 		$this->_validateAndBuidOptions();
 
-		$xsl_path = get_cfg_var('ODataphp_path');
-
-		if (strlen($xsl_path) == 0) {
-			throw new Exception(self::$_messages['ServicePath_Not_Set']);
-		}
-
-		$xsl_path = $xsl_path . "/" . "Common/WCFDataServices2PHPProxy.xsl";
+		// replace a PHP.ini requirement with a sensible alternative
+		$xsl_path = dirname(__FILE__);
 		$xslDoc = new DOMDocument();
-		$xslDoc->load($xsl_path);
+		$xslDoc->load($xsl_path . '/' . 'Common/WCFDataServices2PHPProxy.xsl');
 
 		$proc = new XSLTProcessor();
 		$proc->importStylesheet($xslDoc);
@@ -120,9 +114,10 @@ class PHPSvcUtil {
 			$this->_metadataDoc->loadXML($metadata);
 		}
 
-		$proc->transformToURI($this->_metadataDoc,
-			$this->_options['/out_dir'] .
-			"/" . $this->_getFileName());
+		$proc->transformToURI(
+			$this->_metadataDoc,
+			$this->_options['/out_dir'] . '/' . $this->_getFileName()
+		);
 	}
 
 	/**
@@ -481,11 +476,11 @@ class PHPSvcUtil {
 		$this->_options['/out_filename'] = null;
 
 		$path_parts = pathinfo($this->_options['/out']);
-		$this->_options['/out_dir'] = rtrim($path_parts['dirname'], "\\");
+		$this->_options['/out_dir'] = rtrim($path_parts['dirname'], DIRECTORY_SEPARATOR);
 		if (isset($path_parts['extension']) && !empty($path_parts['extension'])) {
 			$this->_options['/out_filename'] = $path_parts['basename'];
 		} elseif ($path_parts['basename'] != '.') {
-			$this->_options['/out_dir'] .= "\\" . $path_parts['basename'];
+			$this->_options['/out_dir'] .= DIRECTORY_SEPARATOR . $path_parts['basename'];
 		}
 
 		if (!empty($this->_options['/uri'])) {
