@@ -34,7 +34,7 @@ try {
 	$util = new PHPSvcUtil($argv);
 	$util->generateProxy();
 	$options = $util->getOptions();
-	echo "\n" . 'Done: OData Service Proxy File \'' . $options['/out_filename'] .
+	echo 'Done: OData Service Proxy File \'' . $options['/out_filename'] .
 		'\' generated at ' . $options['/out_dir'] . "\n";
 } catch (Exception $e) {
 	$util->showUsageAndExit($e->getMessage());
@@ -140,7 +140,7 @@ class PHPSvcUtil {
 			case 'windows':
 				curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
 				curl_setopt($curlHandle, CURLOPT_USERPWD, $this->_options['/u'] .
-					":" .
+					':' .
 					$this->_options['/p']);
 				break;
 
@@ -168,7 +168,7 @@ class PHPSvcUtil {
 						array('authorization: '. $authHeaderValue));
 				}
 				catch(ACSUtilException $exception) {
-					$error = str_replace("<br/>", "\n", $exception->getError());
+					$error = str_replace('<br/>', "\n", $exception->getError());
 					throw new Exception($error);
 				}
 
@@ -179,11 +179,11 @@ class PHPSvcUtil {
 		if (isset($this->_options['/ph']) &&
 			$this->_options['/ups'] == 'yes') {
 			curl_setopt($curlHandle, CURLOPT_PROXY,
-				$this->_options['/ph'] . ":" . $this->_options['/pp']);
+				$this->_options['/ph'] . ':' . $this->_options['/pp']);
 
 			if (isset($this->_options['/pu'])) {
 				curl_setopt($curlHandle, CURLOPT_PROXYUSERPWD,
-					$this->_options['/pu'] . ":" . $this->_options['/ppwd']);
+					$this->_options['/pu'] . ':' . $this->_options['/ppwd']);
 				curl_setopt($curlHandle, CURLOPT_HTTPPROXYTUNNEL, 1);
 			}
 		}
