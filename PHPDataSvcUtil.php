@@ -55,16 +55,16 @@ class PHPSvcUtil {
 	protected static $QUERY_EDM_2006_04_ENTITYCONTAINER = '//EDM_2006_04:EntityContainer';
 	protected static $QUERY_EDM_2008_09_ENTITYCONTAINER = '//EDM_2008_09:EntityContainer';
 	protected static $_messages = array(
-		'Request_Error' => 'Request for metadata failed; ',
-		'Cannot_Repeat_Option' => 'Option cannot be repeated: ',
-		'Invalid_Path_Usage' => "Using '/uri' and '/metadata' together not allowed",
-		'Missing_Service_Path' => "Valid OData service uri or service metadata file is required",
-		'Auth_Option_Missing1' => 'Using authentication type \'windows\' requires /u and /p to be present',
-		'Auth_Option_Missing2' => 'Using authentication type \'acs\' requires /u /p /sn and /at to be present',
-		'Invalid_Auth_Type' => 'value of auth option is not valid',
-		'Invalid_Proxy_Option' => 'Using \'/ph\' requires \'/pp\' to be present',
-		'Invalid_Option_Format' => 'Make sure the format of all commandline options are \'parameter=value\'',
-		'Invalid_Config_File' => 'The configuration file is not valid',
+		'Request_Error'            => 'Request for metadata failed; ',
+		'Cannot_Repeat_Option'     => 'Option cannot be repeated: ',
+		'Invalid_Path_Usage'       => "Using '/uri' and '/metadata' together not allowed",
+		'Missing_Service_Path'     => "Valid OData service uri or service metadata file is required",
+		'Auth_Option_Missing1'     => 'Using authentication type \'windows\' requires /u and /p to be present',
+		'Auth_Option_Missing2'     => 'Using authentication type \'acs\' requires /u /p /sn and /at to be present',
+		'Invalid_Auth_Type'        => 'value of auth option is not valid',
+		'Invalid_Proxy_Option'     => 'Using \'/ph\' requires \'/pp\' to be present',
+		'Invalid_Option_Format'    => 'Make sure the format of all commandline options are \'parameter=value\'',
+		'Invalid_Config_File'      => 'The configuration file is not valid',
 		'Invalid_Config_File_Path' => 'The configuration file not found'
 	);
 	protected static $default_proxy_file = 'proxy.php';
