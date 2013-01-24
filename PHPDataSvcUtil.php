@@ -34,8 +34,7 @@ try {
 	$util = new PHPSvcUtil($argv);
 	if ($util->generateProxy() !== false) {
 		$options = $util->getOptions();
-		echo 'OData Service Proxy File "', $options['/out_filename'], '"';
-		echo ' generated at ', $options['/out_dir'], "\n";
+		echo 'OData Service Proxy File generated at ', $options['/out_dir'], '/', $options['/out_filename'], "\n";
 	} else {
 		echo 'An XSL Transform error occurred.', "\n";
 		$errors = libxml_get_errors();
@@ -295,58 +294,57 @@ class PHPSvcUtil {
 		echo "\n\n";
 		echo "php PHPDataSvcUtil.php /uri=<data service Uri> | /metadata=<service metadata file> [/out=<output file path>] [/auth=windows|acs /u=username /p=password [/sn=servicenamespace /at=applies_to] ] [/ph=proxy-host /pp=proxy-port [/pu=proxy-user /ppwd=proxy-password]]\n";
 		echo "\n\n Parameters:";
-		echo "\n  /config";
-		echo "\n                    <file>";
+		echo "\n  /config           <file>";
 		echo "\n                    Configuration file";
-		echo "\n  /uri";
-		echo "\n                    OData Service Uri";
-		echo "\n  /metadata";
-		echo "\n                    <file>";
+		echo "\n";
+		echo "\n  /uri              OData Service Uri";
+		echo "\n";
+		echo "\n  /metadata         <file>";
 		echo "\n                    Path to OData Service metadata file";
 		echo "\n";
-		echo "\n                    * Either /uri or /metadata is required";
+		echo "\n    * Either /uri or /metadata is required";
 		echo "\n";
-		echo "\n  /out";
-		echo "\n                    <file>|<dir>";
+		echo "\n  /out              <file>|<dir>";
 		echo "\n                    Target Path (default:Current directory)";
-		echo "\n  /auth";
-		echo "\n                    windows|acs";
+		echo "\n";
+		echo "\n  /auth             windows|acs";
 		echo "\n                    Authentication type required to access the OData Service";
-		echo "\n  /u";
-		echo "\n                    User name (Required for windows|acs authentication)";
+		echo "\n";
+		echo "\n  /u                User name (Required for windows|acs authentication)";
 		echo "\n                    * domain\username: If authentication type is 'windows'";
 		echo "\n                    * scope: If authentication type is 'acs'";
-		echo "\n  /p";
-		echo "\n                    Password (Required for windows|acs authentication)";
+		echo "\n";
+		echo "\n  /p                Password (Required for windows|acs authentication)";
 		echo "\n                    * Windows password: If authentication type is 'windows'";
 		echo "\n                    * issuer-key: If authentication type is 'acs'";
-		echo "\n  /sn";
-		echo "\n                    ACS Service namespace (Required for acs authentication)";
-		echo "\n  /at";
-		echo "\n                    Applies To (Required for acs authentication)";
-		echo "\n  /ph";
-		echo "\n                    Http Proxy Host";
-		echo "\n  /pp";
-		echo "\n                    Http Proxy Port";
 		echo "\n";
-		echo "\n                    * /ph and /pp are required if you are running behind a http proxy";
-		echo "\n  /pu";
-		echo "\n                    Http Proxy user name";
-		echo "\n  /ppwd";
-		echo "\n                    Http Proxy password";
+		echo "\n  /sn               ACS Service namespace (Required for acs authentication)";
 		echo "\n";
-		echo "\n                    * If proxy server requires credentials";
-		echo "\n /ups";
-		echo "\n                    yes|no";
+		echo "\n  /at               Applies To (Required for acs authentication)";
+		echo "\n";
+		echo "\n  /ph               Http Proxy Host";
+		echo "\n";
+		echo "\n  /pp               Http Proxy Port";
+		echo "\n";
+		echo "\n    * /ph and /pp are required if you are running behind a http proxy";
+		echo "\n";
+		echo "\n  /pu               Http Proxy user name";
+		echo "\n";
+		echo "\n  /ppwd             Http Proxy password";
+		echo "\n";
+		echo "\n    * If proxy server requires credentials";
+		echo "\n";
+		echo "\n  /ups              yes|no";
 		echo "\n                    Use Proxy for Service request";
-		print "\n\n                    * By default the user specified proxy settings will be used
-                      while requesting metadata from OData Service. If you are using
-                      ACS auth and access to your service not require any proxy settings
-                      (e.g. service running locally) then set this flag to no, /ups=no";
+		echo "\n                    * By default the user specified proxy settings will be used while";
+		echo "\n                      requesting metadata from OData Service. If you are using ACS auth and";
+		echo "\n                      access to your service not require any proxy settings (e.g. service";
+		echo "\n                      running locally) then set this flag to no, /ups=no";
 		echo "\n";
+		
 		$m = '';
 		if ($inConfig) { $m = ' {Check your configuration file}';}
-		echo $message? "\nError:" . $message . $m . "!\n\n" : "\n";
+		echo $message? "\nError: " . $message . $m . "!\n\n" : "\n";
 		exit;
 
 	}
@@ -383,8 +381,8 @@ class PHPSvcUtil {
 
 				if ($options !== FALSE) {
 					unset($this->_cmdArgs);
-					//ups option is yes/no type, pares_ini_file return it as
-					//1/null so process it here.
+					
+					// parse_ini_file will return yes/no options as 1/null so fix them here
 					if (array_key_exists('/ups', $options)) {
 						if ($options['/ups'] == '')
 							$options['/ups'] = 'no';
@@ -408,18 +406,15 @@ class PHPSvcUtil {
 			$pieces = explode('=', $option, 2);
 
 			if (empty($pieces[0]) || empty($pieces[1])) {
-				$this->showUsageAndExit(self::$_messages['Invalid_Option_Format'],
-					$inConfig);
+				$this->showUsageAndExit(self::$_messages['Invalid_Option_Format'], $inConfig);
 			}
 
 			if (!in_array($pieces[0], $this->_validOptions)) {
-				$this->showUsageAndExit("The option '$pieces[0]', is not valid",
-					$inConfig);
+				$this->showUsageAndExit('The option "'.$pieces[0].'", is not valid', $inConfig);
 			}
 
 			if (array_key_exists($pieces[0], $this->_options)) {
-				$this->showUsageAndExit(self::$_messages['Cannot_Repeat_Option'] . $pieces[0],
-					$inConfig);
+				$this->showUsageAndExit(self::$_messages['Cannot_Repeat_Option'].$pieces[0], $inConfig);
 			}
 
 			if (($pieces[0] == '/uri' && array_key_exists('/metadata', $this->_options)) ||
