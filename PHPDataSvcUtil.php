@@ -32,10 +32,17 @@ require_once $PHPOData_Path.'/Common/ACSUtil.php';
  */
 try {
 	$util = new PHPSvcUtil($argv);
-	$util->generateProxy();
-	$options = $util->getOptions();
-	echo 'Done: OData Service Proxy File \'' . $options['/out_filename'] .
-		'\' generated at ' . $options['/out_dir'] . "\n";
+	if ($util->generateProxy() !== false) {
+		$options = $util->getOptions();
+		echo 'OData Service Proxy File "', $options['/out_filename'], '"';
+		echo ' generated at ', $options['/out_dir'], "\n";
+	} else {
+		echo 'An XSL Transform error occurred.', "\n";
+		$errors = libxml_get_errors();
+		foreach ($errors as $error) {
+			echo $error, "\n";
+		}
+	}
 } catch (Exception $e) {
 	$util->showUsageAndExit($e->getMessage());
 }
@@ -114,9 +121,9 @@ class PHPSvcUtil {
 			$this->_metadataDoc->loadXML($metadata);
 		}
 
-		$proc->transformToURI(
+		return $proc->transformToURI(
 			$this->_metadataDoc,
-			$this->_options['/out_dir'] . '/' . $this->_getFileName()
+			$this->_options['/out_dir'].'/'.$this->_getFileName()
 		);
 	}
 
