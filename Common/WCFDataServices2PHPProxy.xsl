@@ -84,23 +84,23 @@ class <xsl:value-of select="@Name"/>
 		parent::__construct($this->_baseURI);
 		
 		$this->_entities = array(<xsl:for-each select="schema_1_0:EntitySet | schema_1_1:EntitySet | schema_1_2:EntitySet">
-			"<xsl:value-of select="@Name"/>"<xsl:if test="position() != last()">,</xsl:if>
+			'<xsl:value-of select="@Name"/>'<xsl:if test="position() != last()">,</xsl:if>
 </xsl:for-each>
 		);
 		
 		$this->_entitySet2Type = array(<xsl:for-each select="schema_1_0:EntitySet | schema_1_1:EntitySet | schema_1_2:EntitySet">
-			"<xsl:value-of select="translate(@Name, $uppercase, $smallcase)" />" =&gt; "<xsl:value-of select="substring-after(@EntityType, concat($service_namespace, '.'))"/>"<xsl:if test="position() != last()">,</xsl:if>
+			'<xsl:value-of select="translate(@Name, $uppercase, $smallcase)" />' =&gt; '<xsl:value-of select="substring-after(@EntityType, concat($service_namespace, '.'))"/>'<xsl:if test="position() != last()">,</xsl:if>
 </xsl:for-each>
 		);
 		
 		$this->_entityType2Set = array(<xsl:for-each select="schema_1_0:EntitySet | schema_1_1:EntitySet | schema_1_2:EntitySet">
-			"<xsl:value-of select="translate(substring-after(@EntityType, concat($service_namespace, '.')), $uppercase, $smallcase)" />" =&gt; "<xsl:value-of select="@Name"/>"<xsl:if test="position() != last()">,</xsl:if>
+			'<xsl:value-of select="translate(substring-after(@EntityType, concat($service_namespace, '.')), $uppercase, $smallcase)" />' =&gt; '<xsl:value-of select="@Name"/>'<xsl:if test="position() != last()">,</xsl:if>
 </xsl:for-each>
 		);
 
 		$this->_association = array(<xsl:for-each select="/edmx:Edmx/edmx:DataServices/schema_1_0:Schema/schema_1_0:Association | /edmx:Edmx/edmx:DataServices/schema_1_1:Schema/schema_1_1:Association">
-			"<xsl:value-of select="@Name"/>" =&gt; array(<xsl:for-each select="schema_1_0:End | schema_1_1:End">
-				"<xsl:value-of select="@Role"/>" =&gt; "<xsl:value-of select="@Multiplicity"/>" <xsl:if test="position() != last()">,</xsl:if>
+			'<xsl:value-of select="@Name"/>' =&gt; array(<xsl:for-each select="schema_1_0:End | schema_1_1:End">
+				'<xsl:value-of select="@Role"/>" =&gt; "<xsl:value-of select="@Multiplicity"/>'<xsl:if test="position() != last()">,</xsl:if>
 			</xsl:for-each>)<xsl:if test="position() != last()">,</xsl:if>
 </xsl:for-each>
 		);
@@ -209,7 +209,7 @@ class <xsl:value-of select="@Name"/>
 	/**
 	 * Constructor for <xsl:value-of select="@Name"/>
 	 */
-	public function __construct($uri = "") {
+	public function __construct($uri = '') {
 		$this->_objectID = Guid::NewGuid();
 		$this->_baseURI = $uri;
 <xsl:for-each select="schema_1_0:NavigationProperty | schema_1_1:NavigationProperty | schema_1_2:NavigationProperty">
