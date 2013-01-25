@@ -34,7 +34,6 @@ class InternalError extends Exception {
      */
     public function InternalError($error) {
         $this->_error = $error;
-        $this->_detailedError = $detailedError;
     }
 
     /**
