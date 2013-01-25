@@ -36,8 +36,8 @@
  * the code is regenerated.
  */
 
-// assume the PHPOData library is in a PHP include path
-require_once 'PHPOData/Context/ObjectContext.php';
+// assume the PHP OData library is in a PHP include path
+require_once 'OData/Context/ObjectContext.php';
 <xsl:apply-templates select="/edmx:Edmx/edmx:DataServices/schema_1_0:Schema | /edmx:Edmx/edmx:DataServices/schema_1_1:Schema | /edmx:Edmx/edmx:DataServices/schema_1_2:Schema"/>
 </xsl:template>
 
