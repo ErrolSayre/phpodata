@@ -1383,6 +1383,10 @@ class ObjectContext {
 			$headers[HttpRequestHeader::ContentType] = $contentType;
 		}
 
+		foreach ($this->CustomHeaders as $key => $value) {
+			$headers[$key] = $value;
+		}
+
 		$httpRequest = new HttpRequest($httpVerb, $requestUri,
 			$this->Credential, $this->HttpProxy,
 			$headers);
