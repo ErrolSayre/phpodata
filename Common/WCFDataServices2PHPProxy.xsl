@@ -100,7 +100,7 @@ class <xsl:value-of select="@Name"/>
 
 		$this->_association = array(<xsl:for-each select="/edmx:Edmx/edmx:DataServices/schema_1_0:Schema/schema_1_0:Association | /edmx:Edmx/edmx:DataServices/schema_1_1:Schema/schema_1_1:Association | /edmx:Edmx/edmx:DataServices/schema_1_2:Schema/schema_1_2:Association">
 			'<xsl:value-of select="@Name"/>' =&gt; array(<xsl:for-each select="schema_1_0:End | schema_1_1:End | schema_1_2:End">
-				'<xsl:value-of select="@Role"/>" =&gt; "<xsl:value-of select="@Multiplicity"/>'<xsl:if test="position() != last()">,</xsl:if>
+				'<xsl:value-of select="@Role"/>' =&gt; '<xsl:value-of select="@Multiplicity"/>'<xsl:if test="position() != last()">,</xsl:if>
 			</xsl:for-each>)<xsl:if test="position() != last()">,</xsl:if>
 </xsl:for-each>
 		);
