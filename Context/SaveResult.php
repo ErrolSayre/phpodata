@@ -554,7 +554,9 @@ class SaveResult {
             }
 
             $property = "";
-            if(empty($propertyValue) || is_null($propertyValue)) {
+            // Checking for empty($propertyValue) would filter 0 values and
+            // handle them as null
+            if(is_null($propertyValue) || $propertyValue === false) {
                 Utility::GetPropertyType($refProperty, $notNullable);
                 if(!$notNullable) {
                     $property = "<d:" . $propertyName . " " . "m:null=\"true\" />";
@@ -572,10 +574,17 @@ class SaveResult {
                 if(isset($attributes['EdmType']) &&
                    $attributes['EdmType'] != 'Edm.String') {
                     $edmType = ' m:type="' . $attributes['EdmType'] . '"';
+                } 
+
+                if (isset($attributes['EdmType']) &&
+                	$attributes['EdmType'] == 'Edm.String') {
+                	$propertyValueToWrite = "<![CDATA[" . $propertyValue . "]]>";
+                } else {
+                	$propertyValueToWrite = $propertyValue;
                 }
 
                 $property = '<d:' . $propertyName . "$edmType>" .
-                            $propertyValue .
+                            $propertyValueToWrite .
                             '</d:' . $propertyName . '>';
             }
 
