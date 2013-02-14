@@ -1149,7 +1149,7 @@ class ObjectContext {
 	 * To clear the array holding custom headers.
 	 */
 	public function removeHeaders() {
-		unset($this->CustomHeaders);
+		$this->CustomHeaders = array();
 	}
 
 	/**
