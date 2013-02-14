@@ -553,14 +553,27 @@ class SaveResult {
                 continue;
             }
 
-            $property = "";
-            // Checking for empty($propertyValue) would filter 0 values and
-            // handle them as null
-            if(is_null($propertyValue) || $propertyValue === false) {
+            $property = '';
+            // determine if the property is null and should be output accordingly
+        	// for numeric types, utilize a numeric value
+            if ($propertyValue) {
                 Utility::GetPropertyType($refProperty, $notNullable);
                 if(!$notNullable) {
                     $property = "<d:" . $propertyName . " " . "m:null=\"true\" />";
+                } elseif (strpos($edmType, 'Edm.Decimal') === 0) {
+                    $property = '<d:'.$propertyName.'>0.0M</d:'.$propertyName.'>';
+                } elseif (strpos($edmType, 'Edm.Double') === 0) {
+                    $property = '<d:'.$propertyName.'>0.0</d:'.$propertyName.'>';
+                } elseif (strpos($edmType, 'Edm.Int') === 0) {
+                    $property = '<d:'.$propertyName.'>0</d:'.$propertyName.'>';
+                } elseif (strpos($edmType, 'Edm.Single') === 0) {
+                    $property = '<d:'.$propertyName.'>0.0f</d:'.$propertyName.'>';
                 } else {
+/**
+ * The following comment is from the original authors and remains until
+ * further investigation can be made regarding proper behavior of
+ * non-nullable types.
+ */
                     //ex: In the case of OrderID, the ID is a autonumber, so user will not
                     //specify this value, since its a nonnullable value we cant set null=true
                     //property, in this case the correct property node should be
@@ -571,20 +584,17 @@ class SaveResult {
             } else {
                 $attributes = $nonEpmProperty->getAttributes();
                 $edmType = '';
-                if(isset($attributes['EdmType']) &&
-                   $attributes['EdmType'] != 'Edm.String') {
+                if (
+                    isset($attributes['EdmType']) &&
+                    $attributes['EdmType'] != 'Edm.String'
+                ) {
                     $edmType = ' m:type="' . $attributes['EdmType'] . '"';
-                } 
-
-                if (isset($attributes['EdmType']) &&
-                	$attributes['EdmType'] == 'Edm.String') {
-                	$propertyValueToWrite = "<![CDATA[" . $propertyValue . "]]>";
-                } else {
-                	$propertyValueToWrite = $propertyValue;
+                    // wrap value in CDATA tag since strings may contain XML special characters
+                	$propertyValue = "<![CDATA[" . $propertyValue . "]]>";
                 }
 
-                $property = '<d:' . $propertyName . "$edmType>" .
-                            $propertyValueToWrite .
+                $property = '<d:' . $propertyName . $edmType . '>' .
+                            $propertyValue .
                             '</d:' . $propertyName . '>';
             }
 
@@ -640,23 +650,38 @@ class SaveResult {
                 $propertyName = $nonEpmProperty->getName();
                 $refProperty = new ReflectionProperty($object, $propertyName);
                 $propertyValue = $refProperty->getValue($object);
-                $property = null;
-                if(empty($propertyValue) || is_null($propertyValue)) {
+                
+                $property = '';
+                // determine if the property is null and should be output accordingly
+            	// for numeric types, utilize a numeric value
+                if (!$propertyValue) {
                     Utility::GetPropertyType($refProperty, $notNullable);
                     if(!$notNullable) {
                         $property = "<d:" . $propertyName . " " . "m:null=\"true\" />";
+                    } elseif (strpos($edmType, 'Edm.Decimal') === 0) {
+                        $property = '<d:'.$propertyName.'>0.0M</d:'.$propertyName.'>';
+                    } elseif (strpos($edmType, 'Edm.Double') === 0) {
+                        $property = '<d:'.$propertyName.'>0.0</d:'.$propertyName.'>';
+                    } elseif (strpos($edmType, 'Edm.Int') === 0) {
+                        $property = '<d:'.$propertyName.'>0</d:'.$propertyName.'>';
+                    } elseif (strpos($edmType, 'Edm.Single') === 0) {
+                        $property = '<d:'.$propertyName.'>0.0f</d:'.$propertyName.'>';
                     } else {
                         continue;
                     }
                 } else {
                     $attributes = $nonEpmProperty->getAttributes();
                     $edmType = '';
-                    if(isset($attributes['EdmType']) &&
-                    $attributes['EdmType'] != 'Edm.String') {
+                    if (
+                        isset($attributes['EdmType']) &&
+                        $attributes['EdmType'] != 'Edm.String'
+                    ) {
                         $edmType = ' m:type="' . $attributes['EdmType'] . '"';
+                        // wrap value in CDATA tag since strings may contain XML special characters
+                    	$propertyValue = "<![CDATA[" . $propertyValue . "]]>";
                     }
-
-                    $property = '<d:' . $propertyName . "$edmType>" .
+    
+                    $property = '<d:' . $propertyName . $edmType . '>' .
                                 $propertyValue .
                                 '</d:' . $propertyName . '>';
                 }
