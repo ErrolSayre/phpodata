@@ -1040,7 +1040,7 @@ class ObjectContext {
 			$resource = $class->newInstance($uri);
 			$index = Utility::reverseFind($uri, '/');
 			$editLink = substr($uri, $index + 1, strlen($uri) - $index);
-			$resourceBox = new Resourcebox($uri, $editLink, $resource);
+			$resourceBox = new ResourceBox($uri, $editLink, $resource);
 
 			$resourceBox->EditMediaLink  = $atomEntry->EditMediaLink;
 			$resourceBox->MediaLinkEntry = $atomEntry->MediaLinkEntry;
