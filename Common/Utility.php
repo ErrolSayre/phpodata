@@ -330,14 +330,14 @@ class Utility {
      *@param <string> $value
      *Merge $value with $string and append a newline at the end
      */
-    public function WriteLine(&$string, $value) {
+    public static function WriteLine(&$string, $value) {
         if($value != null) {
             $string = $string . $value;
         }
         $string = $string . "\n";
     }
 
-    public function GetPropertyType($property, &$notNullable) {
+    public static function GetPropertyType($property, &$notNullable) {
         $type = "";
         $notNullable = false;
 
