@@ -268,7 +268,7 @@ class AtomParser {
         return $relLinks;
     }
 
-    protected function CheckAndProcessMediaLinkEntryData($xPath, &$atomEntry) {
+    protected static function CheckAndProcessMediaLinkEntryData($xPath, &$atomEntry) {
         $edit_media_links = $xPath->query(self::$QUERY_EDIT_MEDIA_LINK);
         if($edit_media_links->length) {
             $edit_media_link = $edit_media_links->item(0);
@@ -294,7 +294,7 @@ class AtomParser {
         }
     }
 
-    protected function SetObjectProperty($object, $property) {
+    protected static function SetObjectProperty($object, $property) {
         $prefix = $property->prefix;
         $name = $property->nodeName;
 
@@ -335,7 +335,7 @@ class AtomParser {
         return $domDocument_From_Node;
     }
 
-    protected function GetAttribute($node, $attributeName) {
+    protected static function GetAttribute($node, $attributeName) {
         $attributes = $node->attributes;
         foreach ($attributes as $attribute) {
             if ($attribute->nodeName == $attributeName) {
