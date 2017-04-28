@@ -31,7 +31,7 @@ class Collection {
      * Construct Collection instance.
      *
      */
-    public function Collection() {
+    public function __construct() {
         $this->_keyValPairs = array();
     }
 

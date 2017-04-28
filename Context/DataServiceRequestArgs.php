@@ -32,7 +32,7 @@ class DataServiceRequestArgs {
      * To construct DataServiceRequestArgs instance.
      *
      */
-    public function DataServiceRequestArgs() {
+    public function __construct() {
         $this->_headers = array();
     }
 

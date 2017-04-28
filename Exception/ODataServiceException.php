@@ -41,7 +41,7 @@ class ODataServiceException extends Exception {
      * @param string $errorStr Error String as plain string or Atom format
      * @param string $content_type
      */
-    public function ODataServiceException($errorStr, $content_type = '',
+    public function __construct($errorStr, $content_type = '',
                                           $headers = array(), $statusCode = '') {
         $this->_headers = $headers;
         $this->_statusCode = $statusCode;

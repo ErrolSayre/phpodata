@@ -224,7 +224,7 @@ class Dictionary {
     public static function Merge($dictionary1, $dictionary2,
                                  $propertyName = null, $propertyValue = null,
                                  $condition = TRUE) {
-        $mergedDictionary = new Dictionary();
+        $mergedDictionary = new __construct();
         foreach($dictionary1->_entries as $key => $value) {
             if(($propertyName != null) &&
                (!Dictionary::canAdd($value->entry2, $propertyName, $propertyValue, $condition))) {
@@ -291,7 +291,7 @@ class Pair {
      * @param <Object> $entry1
      * @param <Object> $entry2
      */
-    public function Pair($entry1, $entry2) {
+    public function __construct($entry1, $entry2) {
         $this->entry1 = $entry1;
         $this->entry2 = $entry2;
     }

@@ -131,7 +131,7 @@ class SaveResult {
       * @param ObjectContext $context
       * @param SaveChangesOption $saveChangesOptions
       */
-    public function SaveResult($context, $saveChangesOptions) {
+    public function __construct($context, $saveChangesOptions) {
         $this->_context = $context;
         $mergedDictionary = Dictionary::Merge($this->_context->ObjectToResource,
                                         $this->_context->Bindings,

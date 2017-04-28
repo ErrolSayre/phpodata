@@ -38,7 +38,7 @@ class HttpBatchRequest {
      * @param array $headers
      * @return No return Value
      */
-    public function HttpBatchRequest($url, $batchBoundary, $batchRequestBody,
+    public function __construct($url, $batchBoundary, $batchRequestBody,
                                      $credential, $proxy, $headers = array(),
                                      $credentialsInHeaders = false) {
         $requestHeaders = array();

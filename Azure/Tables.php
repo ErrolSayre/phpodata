@@ -30,7 +30,7 @@ class Tables extends Object {
 	 */
 	public $TableName;
 
-	public function Tables($uri = "") {
+	public function __construct($uri = "") {
 		$this->_objectID = Guid::NewGuid();
 		$this->_baseURI = $uri;
 	}

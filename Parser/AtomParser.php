@@ -64,7 +64,7 @@ class AtomEntry {
      */
     public $Identity;
 
-    public function AtomEntry() {
+    public function __construct() {
         $this->MediaLinkEntry = false;
         $this->MediaContentUri = null;
         $this->EditMediaLink = null;
@@ -109,7 +109,7 @@ class AtomParser {
     protected $_objectIDToNextLinkUri = array();
     protected $_inlineCount = -1;
 
-    public function AtomParser($xml, $objectContext) {
+    public function __construct($xml, $objectContext) {
         $this->domDocument = new DOMDocument();
         $this->domDocument->loadXML( $xml );
         $this->objectContext = $objectContext;

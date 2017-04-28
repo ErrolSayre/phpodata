@@ -81,7 +81,7 @@ class PHPSvcUtil {
 	 *
 	 * @param array $options
 	 */
-	public function PHPSvcUtil($options) {
+	public function __construct($options) {
 		unset($options[0]);
 		$this->_cmdArgs = $options;
 	}
